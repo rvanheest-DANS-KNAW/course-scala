@@ -1,5 +1,6 @@
 /*
 See also http://stackoverflow.com/questions/7681161/whats-the-difference-between-and-equals-in-scala
+         http://daily-scala.blogspot.nl/2009/08/equals.html
  */
 
 // a `Person` class
