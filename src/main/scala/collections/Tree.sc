@@ -4,27 +4,17 @@ sealed trait Tree
 case class Branch(left: Tree, right: Tree) extends Tree
 case class Leaf(value: Int) extends Tree
 
-def size(tree: Tree): Int = {
-  tree match {
-    case Branch(left, right) => 1 + size(left) + size(right)
-    case Leaf(_) => 1
-  }
-}
+// calculates the size of the tree
+def size(tree: Tree): Int = ???
 
-def height(tree: Tree): Int = {
-  tree match {
-    case Branch(left, right) => 1 + math.max(height(left), height(right))
-    case Leaf(_) => 1
-  }
-}
+// calculates the height of the tree
+def height(tree: Tree): Int = ???
 
-def contains(value: Int, tree: Tree): Boolean = {
-  tree match {
-    case Branch(left, right) => contains(value, left) || contains(value, right)
-    case Leaf(v) => value == v
-  }
-}
+// checks whether a value is in the tree
+def contains(value: Int, tree: Tree): Boolean = ???
 
+
+// examples of tree
 val tree1 = Leaf(5)
 
 size(tree1)
