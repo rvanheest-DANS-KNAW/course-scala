@@ -1,3 +1,4 @@
+<!-- inspired by Scala for the Impatient -->
 # Time
 1. Create a class `Time` with read-only properties `hours` and `minutes` in [24-hour clock format](https://en.wikipedia.org/wiki/24-hour_clock).
 2. Make sure that you can only create valid times. Instances like `Time(25, 69)` should cause an exception. Hint: have a look at [this blog post](http://daily-scala.blogspot.nl/2010/03/assert-require-assume.html).
@@ -5,6 +6,6 @@
 4. Implement a method `isBefore(other: Time): Boolean` that checks whether `this` time comes before the `other` time.
 5. Instead of `isBefore` you can also create a method `<` with the same type signature and the same specification. Experiment with this. Which of the two do you find more convenient to use?
 6. Create a companion object with 2 `apply` methods:
-    a) the first `apply` takes the same parameters as the class constructor and create a new `Time` instance with these parameters
-    b) the second `apply` takes a `String` with the same format as the `toString` implemented in 3 and creates an instance of `Time`.
+    1. the first `apply` takes the same parameters as the class constructor and create a new `Time` instance with these parameters
+    2. the second `apply` takes a `String` with the same format as the `toString` implemented in 3 and creates an instance of `Time`.
 7. Would it be beneficial to make `Time` a case class? What code could you remove with this? Would it provide features that `Time` currently don't have?

@@ -1,3 +1,4 @@
+<!-- inspired by Scala for the Impatient -->
 # Point
 1. Define a class `Point` that describes an (x,y) coordinate.
 2. Create a companion object such that you can create instances of `Point` without writing new.
