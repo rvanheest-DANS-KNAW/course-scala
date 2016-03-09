@@ -1,12 +1,25 @@
 import scala.annotation.tailrec
 
+// 1. Define a class `Rational`...
+// 1.1 have a constructor that accepts every set of numerator and denominator
+// 2. Write the constructor that only accepts a numerator
 class Rational(n: Int, d: Int = 1) {
 
+  // 1.3 make sure the constructor does not accept `denominator = 0`
   require(d != 0)
   private val g = gcd(n.abs, d.abs)
+  // 1.2 have two final fields that store the simple form of the rational number
   val numer = n / g
   val denom = d / g
 
+  // 1.4 calculate the simple form of a rational
+  @tailrec
+  private def gcd(a: Int, b: Int): Int = {
+    if (b == 0) a
+    else gcd(b, a % b)
+  }
+
+  // 5-7 Implement +, -, * and /
   def +(that: Rational): Rational = {
     new Rational(numer * that.denom + that.numer * denom, denom * that.denom)
   }
@@ -39,20 +52,16 @@ class Rational(n: Int, d: Int = 1) {
     new Rational(numer, denom * i)
   }
 
+  // 4. Implement the `equals` method
   override def equals(other: Any): Boolean = other match {
     case that: Rational => numer == that.numer && denom == that.denom
     case _ => false
   }
 
+  // 3. Implement the `toString` method...
   override def toString = {
     if (denom == 1) numer.toString
     else numer + "/" + denom
-  }
-
-  @tailrec
-  private def gcd(a: Int, b: Int): Int = {
-    if (b == 0) a
-    else gcd(b, a % b)
   }
 }
 
@@ -63,6 +72,14 @@ val r3 = new Rational(3, 4)
 r1 == r2
 r2 == r3
 
+// 8. Write some equations...
 r1 + r2
 r2 + r3
 r2 + (r3 * 2)
+
+// 9. Why would it NOT be useful to have Rational be a case class?
+/*
+   A case class would automatically create public getters for all constructor parameters. However, in this case we don't want that, as we probably need to convert the input parameters into their simple form.
+ */
+
+// 10. I didn't feel that fancy, hopefully you did ;-P

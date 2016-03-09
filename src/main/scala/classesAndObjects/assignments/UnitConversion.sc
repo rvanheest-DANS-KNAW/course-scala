@@ -1,5 +1,6 @@
 import Conversions._
 
+// 1. Create an object `Conversions`...
 object Conversions {
   def inchesToCentimeters(inches: Double) = inches * 2.54
 
@@ -12,6 +13,7 @@ inchesToCentimeters(20.5)
 gallonsToLiters(12.3)
 milesToKilometers(321)
 
+// 2. Create a general superclass `UnitConversion`...
 class UnitConversion(val conversionFactor: Double) {
   def apply(value: Double) = value * conversionFactor
 }
