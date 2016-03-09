@@ -12,4 +12,4 @@
 7. Repeat step 5 and 6 for `-`, `*` and `/`
 8. Write some equations with your `Rational` implementation and see how it works
 9. Why would it **not** be useful to have `Rational` be a case class?
-10. If you feel fancy, implement some more operators such as *inversion* and *exponentiation* or implement a method that represents a `Rational` in [another representation](https://en.wikipedia.org/wiki/Rational_number#Other_representations).
+10. If you feel fancy, implement some more operators such as *inversion*, *exponentiation*, *comparison operators such as `<`, `>`, `<=`, `>=`, `==` and `!=`* or implement a method that represents a `Rational` in [another representation](https://en.wikipedia.org/wiki/Rational_number#Other_representations).

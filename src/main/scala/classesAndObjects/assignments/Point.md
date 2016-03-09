@@ -5,3 +5,4 @@
 3. Create a singleton object `Origin` that represents the (0,0) coordinate.
 4. Check that two instances of `Origin` refer to the same object in memory.
 5. Implement a function `distance` that calculates the distance between two `Point` instances. **Hint:** you need the [Pythagorean theorem](https://en.wikipedia.org/wiki/Pythagorean_theorem) as well as [Scala's math object](http://www.scala-lang.org/api/current/#scala.math.package)
+6. Can you refactor `Point` to a case class? Which code can you get rid of? Can you still extend `Origin` from `Point` now that it is a case class?
