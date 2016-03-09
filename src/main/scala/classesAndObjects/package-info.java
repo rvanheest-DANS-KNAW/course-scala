@@ -6,7 +6,6 @@
  *     <li>equality operators on classes</li>
  *     <li>objects</li>
  *     <li>case classes</li>
- *     <li>...</li>
  * </ul>
  */
 package classesAndObjects;
