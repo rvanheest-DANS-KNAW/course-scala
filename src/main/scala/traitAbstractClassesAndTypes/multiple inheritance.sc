@@ -1,22 +1,5 @@
 import scala.collection.mutable.ListBuffer
 
-//abstract class Writer {
-//  def write(msg: String)
-//}
-//
-//class StringWriter extends Writer {
-//  val builder = new StringBuilder
-//
-//  def write(msg: String) = builder.append(msg)
-//
-//  override def toString = builder.toString
-//}
-//
-//def writeStuff(writer: Writer) = {
-//  writer.write("")
-//  println(writer.toString)
-//}
-
 // an interface for a list of integers
 trait IntList {
   def add(x: Int)
