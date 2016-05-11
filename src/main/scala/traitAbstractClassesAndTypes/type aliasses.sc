@@ -14,7 +14,7 @@ import scala.collection.mutable.ListBuffer
  */
 
 /* example 1:
-  ex1 returns a List[String, but from the context it may not be clear
+  ex1 returns a List[String], but from the context it may not be clear
   what these Strings represent
  */
 def ex1(age: Int): List[String] = {

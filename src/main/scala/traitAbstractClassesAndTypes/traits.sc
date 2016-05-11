@@ -1,7 +1,7 @@
 import ExpressionEvaluator._
 import PrettyPrinter._
 
-trait Expr
+sealed trait Expr
 case class Number(value: Int) extends Expr
 case class Sum(lhs: Expr, rhs: Expr) extends Expr
 case class Product(lhs: Expr, rhs: Expr) extends Expr

@@ -1,6 +1,6 @@
 // a human can listen to you
 // BTW case classes in this example are just there for prettyprinting ;)
-case class Human(val name: String) {
+case class Human(name: String) {
   def listen() = s"I ($name) am listening"
 }
 

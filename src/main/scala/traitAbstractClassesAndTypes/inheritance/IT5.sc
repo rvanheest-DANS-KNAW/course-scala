@@ -4,9 +4,9 @@ trait Friend {
   def listen() = s"I ($name) am listening"
 }
 
-case class Human(val name: String) extends Friend
+case class Human(name: String) extends Friend
 
-case class Animal(val name: String)
+case class Animal(name: String)
 
 case class Dog(override val name: String) extends Animal(name) with Friend
 

@@ -7,7 +7,7 @@ trait Friend {
 }
 
 // a human can be a friend - extending from a trait
-case class Human(val name: String) extends Friend
+case class Human(name: String) extends Friend
 
 // declaration for any animal
 class Animal(val name: String)
