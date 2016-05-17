@@ -1,9 +1,11 @@
-// more general, a friend can listen to you
+// a friend can listen to you
 trait Friend {
-  // to use the name in listen(), you need to declare it here and give a value for it in each implementation
+  // to use the name in listen(), you need to declare it here
+  // and give a value for it in each implementation
+  // NOTE: we cannot use an abstract class for this; we will get to this later!
   val name: String
 
-  def listen() = s"I ($name) am listening"
+  def listen() = s"$name: I am listening"
 }
 
 // a human can be a friend - extending from a trait
@@ -20,6 +22,6 @@ case class Dog(override val name: String) extends Animal(name)
 val alice = new Human("Alice")
 alice.listen()
 
-// a Dog, "Maurice", cannot listen because neither Dog or its super class have a method `listen()`
+// a Dog, "Maurice", cannot listen because neither Dog nor its super class have a method `listen()`
 val maurice = new Dog("Maurice")
 //maurice.listen()
