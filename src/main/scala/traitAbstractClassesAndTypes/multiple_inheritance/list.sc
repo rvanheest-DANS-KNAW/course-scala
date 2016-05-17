@@ -12,7 +12,7 @@ class BasicIntList extends IntList {
   def add(x: Int) = list += x
 
   // mkString makes a String-representation of a List
-  // List(1, 2, 3).mkString("{", " - ", "}") == {1 - 2 - 3}
+  // eg. List(1, 2, 3).mkString("{", " - ", "}") == {1 - 2 - 3}
   override def toString = list.mkString("[", ", ", "]")
 }
 
