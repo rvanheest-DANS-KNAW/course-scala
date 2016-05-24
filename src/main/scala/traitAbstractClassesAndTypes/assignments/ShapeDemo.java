@@ -13,6 +13,8 @@ public class ShapeDemo {
 		System.out.println(circle.area());
 	}
 
+	// 3a. Implementation in Java with the operations as abstract methods on `Shape`
+	//     Note: the static keywords are here to get it all working in a single file
 	static abstract class Shape {
 		abstract double circumference();
 		abstract double area();

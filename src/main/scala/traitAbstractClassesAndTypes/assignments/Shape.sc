@@ -1,9 +1,11 @@
 import Shape._
 
+// 1. class definitions
 abstract class Shape
 case class Rectangle(w: Double, h: Double) extends Shape
 case class Circle(radius: Double) extends Shape
 
+// 2. Shape functionality
 object Shape {
   def circumference(shape: Shape): Double = {
     shape match {
@@ -20,6 +22,7 @@ object Shape {
   }
 }
 
+// 2a. Some testing
 val rectangle = Rectangle(2, 1)
 val circle = Circle(1)
 
@@ -28,3 +31,7 @@ circumference(circle)
 
 area(rectangle)
 area(circle)
+
+// 3a. See the ShapeDemo.java file
+
+// 3b, 4. and 5. See the ShapeOO.sc file
