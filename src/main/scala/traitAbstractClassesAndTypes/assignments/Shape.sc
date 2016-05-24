@@ -1,4 +1,4 @@
-import Shape._
+import ShapeCalc._
 
 // 1. class definitions
 abstract class Shape
@@ -6,7 +6,7 @@ case class Rectangle(w: Double, h: Double) extends Shape
 case class Circle(radius: Double) extends Shape
 
 // 2. Shape functionality
-object Shape {
+object ShapeCalc {
   def circumference(shape: Shape): Double = {
     shape match {
       case Rectangle(w, h) => 2 * (w + h)
