@@ -1,3 +1,5 @@
+import java.util.NoSuchElementException
+
 import scala.annotation.tailrec
 
 // 1. Define a class `Rational`...
@@ -52,6 +54,15 @@ class Rational(n: Int, d: Int = 1) {
     new Rational(numer, denom * i)
   }
 
+  def ^(exp: Int): Rational = {
+    new Rational(math.pow(numer, exp).toInt, math.pow(denom, exp).toInt)
+  }
+
+  def inverse: Rational = {
+    if (numer == 0) throw new NoSuchElementException("inversion is not allowed: the numerator is zero")
+    else new Rational(denom, numer)
+  }
+
   // 4. Implement the `equals` method
   override def equals(other: Any): Boolean = other match {
     case that: Rational => numer == that.numer && denom == that.denom
@@ -62,6 +73,13 @@ class Rational(n: Int, d: Int = 1) {
   override def toString = {
     if (denom == 1) numer.toString
     else numer + "/" + denom
+  }
+
+  def toMixedNumeral = {
+    val wholeNum = numer / denom
+
+    if (wholeNum == 0) toString
+    else s"$wholeNum ${numer % denom}/$denom"
   }
 }
 
@@ -82,4 +100,13 @@ r2 + (r3 * 2)
    A case class would automatically create public getters for all constructor parameters. However, in this case we don't want that, as we probably need to convert the input parameters into their simple form.
  */
 
-// 10. I didn't feel that fancy, hopefully you did ;-P
+// 10. See above, in the class definition (`^`, `inverse` and `toMixedNumeral`). Below are some test cases
+r1 ^ 2
+r1 ^ 1
+r1 ^ 0
+
+r1.inverse
+r2.inverse
+r3.inverse
+
+r3.inverse.toMixedNumeral
