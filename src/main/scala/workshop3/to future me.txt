@@ -13,7 +13,9 @@ Content of this workshop:
  [ ] Seq/List/Map/<other collections>
      - Java vs. Scala
      - map/filter/fold/foreach al besproken
-     - flatMap/<andere (hogere orde) functions>
+     - flatMap
+     - andere (hogere orde) functions op List zoals drop(While), forall, partition, slice, span, take(While), zip(WithIndex)
+     - afwijkende operators op Map
  [ ] follow the types
 
 Assignments:
