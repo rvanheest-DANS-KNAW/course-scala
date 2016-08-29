@@ -6,3 +6,4 @@
 * TODO: try assignment
 * [Animals](Animals.md)
 * [FileIO](FileIO.md)
+* [Operators as folds](OperatorsAsFolds.md)
