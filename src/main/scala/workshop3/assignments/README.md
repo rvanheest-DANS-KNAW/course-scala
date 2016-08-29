@@ -3,3 +3,5 @@
 * [Employee](Employee.md)
 * [Diner](Diner.md)
 * [Postcard](Postcard.md)
+* TODO: try assignment
+* [Animals](Animals.md)
