@@ -12,8 +12,9 @@ Content of this workshop:
      - partial functions
  [ ] Seq/List/Map/<other collections>
      - Java vs. Scala
-     - map/filter/fold/foreach al besproken
+     x map/filter/fold/foreach al besproken
      v flatMap
+     - put reduce/reduceOption in this section instead of 'functional-operators'!
      - andere (hogere orde) functions op List zoals drop(While), forall, partition, slice, span, take(While), zip(WithIndex)
      - afwijkende operators op Map
  [ ] follow the types
