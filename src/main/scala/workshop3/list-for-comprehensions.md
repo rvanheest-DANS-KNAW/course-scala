@@ -1,3 +1,5 @@
+# List and for-comprehensions
+
 In the same way as we use `flatMap` on `Option`, we can use it on `List` as well. For example, if we want a list with tuples of all combinations of elements of two lists, we write:
 
 ```scala
