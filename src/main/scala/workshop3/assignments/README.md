@@ -6,3 +6,6 @@
 * [Animals](Animals.md)
 * [FileIO](FileIO.md)
 * [Implement the operators](ImplementTheOperators.md)
+
+##Bonus assignments
+* [Tree](Tree.md)

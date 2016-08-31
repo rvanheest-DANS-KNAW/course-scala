@@ -35,7 +35,7 @@ Assignments:
  [v] Resource monad (Scala ARM library)
      - Lees van meerdere files
      - Schrijf naar meerdere files
- [ ] Tree Monad (John Hughes - http://www.cse.chalmers.se/~rjmh/OPLSS/Exercises.pdf)
+ [v] Tree Monad (John Hughes - http://www.cse.chalmers.se/~rjmh/OPLSS/Exercises.pdf)
      - map
      - flatMap
      - zipTree
