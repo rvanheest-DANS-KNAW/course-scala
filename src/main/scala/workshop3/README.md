@@ -9,3 +9,4 @@ Please read through the material in the following order, before proceeding to th
 * [`flatMap` and for-comprehension on `Option`](option-flatmap.md)
 * [for-comprehension on `List`](list-for-comprehensions.md)
 * [`Try`](try.md) - *introducting the `Try` type as **the** way of handling errors in a functional way*
+* [other collections](other-collections.md) - *conversion between Java and Scala collections and some more operators*
