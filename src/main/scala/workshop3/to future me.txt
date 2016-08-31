@@ -25,7 +25,7 @@ Assignments:
      + http://nerd.kelseyinnis.com/blog/2013/11/12/idiomatic-scala-the-for-comprehension/
      v Option
      v List
-     - Try
+     x Try
  [v] Animals (Map/Option)
  [x] Lange chain van operators met verschillende soorten operators door elkaar, ook die niet aan bod gekomen zijn
  [x] Andere opgaven met Try/Option/List/...
@@ -40,6 +40,6 @@ Assignments:
      - https://github.com/rvanheest/Experiments/blob/monadics-libs/Monadics/src/main/scala/monadics/instances/Tree.scala
 
 Bonus assignments:
- [ ] Implement foldLeft in terms of foldRight
+ [x] Implement foldLeft in terms of foldRight
  [ ] Implement the Continuation Monad [special case of (T -> ()) -> ()] of FP101x-lab5
  [ ] Implement the State Monad
