@@ -30,8 +30,8 @@ Assignments:
  [x] Lange chain van operators met verschillende soorten operators door elkaar, ook die niet aan bod gekomen zijn
  [x] Andere opgaven met Try/Option/List/...
  [v] Implement operators in terms of folds (size, filter, map, forall, exists, reverse; zie paper Erik Meijer)
- [ ] Implement map in terms of flatMap and apply
- [ ] Implement a running sum and average over the last n element
+ [v] Implement map in terms of flatMap and apply
+ [v] Implement a running sum and average over the last n element
  [v] Resource monad (Scala ARM library)
      - Lees van meerdere files
      - Schrijf naar meerdere files

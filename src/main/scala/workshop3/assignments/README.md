@@ -5,4 +5,4 @@
 * [Postcard](Postcard.md)
 * [Animals](Animals.md)
 * [FileIO](FileIO.md)
-* [Operators as folds](OperatorsAsFolds.md)
+* [Implement the operators](ImplementTheOperators.md)

@@ -43,7 +43,7 @@ In the previous sections we have discussed various operators on List, mainly `ma
 * `forall(p: A => Boolean)` tests whether *all* elements in the collection satisfy the predicate `p`
 * `groupBy[K](f: A => K)` collects all elements of the collection into various groups, based on a common key of type `K`. The results are collected in a `Map[K, List[A]]`
 * `partition(p: A => Boolean)` separates the elements that satisfy the predicate `p` from the ones that don't and collects the results in two lists that are returned as a tuple
-* `scanLeft/scanRight` does the same as `foldLeft/foldRight` but keeps all intermediate results. With this you can for example construct a running sum 
+* `scanLeft/scanRight` does the same as `foldLeft/foldRight` but keeps all intermediate results. This is useful to maintain some state throughout the sequence of operators. 
 * `span(p: A => Boolean)` splits a list into a prefix and suffix according to the predicate `p` 
 * `take(n: Int)` keeps the first `n` elements and discards the rest of the collection
 * `takeWhile(p: A => Boolean)` keeps all elements as long as they satisfy the predicate `p`
