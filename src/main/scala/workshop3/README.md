@@ -1,4 +1,5 @@
-#Workshop 3
+Workshop 3
+==========
 
 In this workshop we cover Collections, Option, Try and higher-order functions on these classes.
 Please read through the material in the following order, before proceeding to the assignments.
@@ -11,7 +12,7 @@ Please read through the material in the following order, before proceeding to th
 * [`Try`](try.md) - *introducting the `Try` type as **the** way of handling errors in a functional way*
 * [other collections](other-collections.md) - *conversion between Java and Scala collections and some more operators*
 
-####Further reading/watching (totally optional)
+#### Further reading/watching (totally optional)
 * [Monads in pictures](http://adit.io/posts/2013-04-17-functors,_applicatives,_and_monads_in_pictures.html) - *The `map` and `flatMap` operators that we used in this workshop are formalized in the concepts of `Functor` and `Monad`. This is a good post to understand what these do and how `map` and `flatMap` are supposed to behave.*
 * [Learn You a Haskell for Great Good](http://learnyouahaskell.com/) - *For the ones that are really interested in functional programming, this book is **the** place to start!*
 * [Scala Monads](https://youtu.be/Mw_Jnn_Y5iA) - *A good starter explanation of the `Option`, `Try` and `List` monads <sup>that shows remarkable similarities with our explanation :stuck_out_tongue_winking_eye:...</sup>*
