@@ -170,7 +170,7 @@ count("abcdef", c => c == 'b' || c == 'c')
 count("abcdef", _ => true)
 ```
 
-Final note: the function we have defined is also present [in the Scala API](http://www.scala-lang.org/api/current/index.html#scala.collection.mutable.Traversable@count(p:A=%3EBoolean):Int)
+Final note: the function we have defined is also present [in the Scala API](http://www.scala-lang.org/api/current/index.html#scala.collection.immutable.StringOps@count(p:A=%3EBoolean):Int)
 and does exactly the same!
 
 ```scala
