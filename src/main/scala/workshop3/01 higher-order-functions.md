@@ -91,7 +91,7 @@ the type of these functions as `Char => Boolean` (pronounced *"char to boolean"*
 We can now use this function type as an argument in the refactored counting-function:
 
 ```scala
-def count(string: String, predicate: Char => Boolean) = {
+def count(string: String, predicate: Char => Boolean): Int = {
   var count = 0
   for (c <- string) {
     if (predicate(c)) 
