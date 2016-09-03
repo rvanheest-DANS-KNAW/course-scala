@@ -151,10 +151,18 @@ c => true
 ```
 
 Besides that, if the argument is never used, it does not require a name either, so it can be replaced 
-by an underscore: `_ => true`.
+by an underscore: 
+
+```scala
+_ => true
+```
 
 On the same note: if an argument is only used once, often the `c => c` part can be replaced by an 
-underscore as well: `_ == 'a'`
+underscore as well: 
+
+```scala
+_ == 'a'
+```
 
 ```scala
 count("abcdef", _ == 'a')
