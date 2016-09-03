@@ -34,8 +34,8 @@ numberOfA("abcdef")
 numberOfA("abba")
 ```
 
-Finally you are asked to implement a function that counts the number of b's **and** c's in a string. 
-Again you can copy-paste the latest String and modify it a bit:
+Finally, you are asked to implement a function that counts the number of b's **and** c's in a string. 
+Again you can copy-paste the latest implementation and modify it a bit:
 
 ```scala
 def numberOfBandC(string: String): Int = {
@@ -50,14 +50,13 @@ numberOfBandC("abcdef")
 numberOfBandC("abba")
 ```
 
-Looking back at this code makes you realize that your are repeating yourself a lot (violating the [DRY]-principle). 
+Looking back at this code makes you realize that your are repeating yourself a lot (in violation of the [DRY]-principle). 
 A great way to refactor these functions in this case is to write a **higher-order function**.
 
 [DRY]: https://en.wikipedia.org/wiki/Don%27t_repeat_yourself
 
-A higher-order function is a function that takes as its argument another function. This is different 
-from the functions above that just take 'normal' values as their arguments. A Higher-order function 
-may look like this:
+A higher-order function is a function that takes other functions as arguments or returns a function as result. This is different 
+from the functions above that just take 'normal' values as their arguments. A Higher-order function may look like this:
 
 ```scala
 def name(f: I => O): X
@@ -71,11 +70,11 @@ where
 * `O` is the output type of the functional argument
 * `X` is the return type of the higher-order function
 
-Note that higher-order functions can also take '*normal*' values as their arguments. The term 'higher-order' 
+Note that higher-order functions can also take *'normal'* values as their arguments. The term 'higher-order' 
 just signifies that one or more arguments (or the return value) are functions.
 
 In the case of the counting examples, we could generalize the second and third function by using a higher-order 
-function for the predicate in the if-statements. First we can write these predicates as '*normal*' functions:
+function for the predicate in the if-statements. First we can write these predicates as *'normal'* functions:
 
 ```scala
 def charIsA(c: Char): Boolean = {
@@ -87,7 +86,7 @@ def charIsBorC(c: Char): Boolean = {
 ```
 
 Note that both these functions have an input argument of type `Char` and an output of type `Boolean`. We write 
-the type of these functions as `Char => Boolean` (pronounced "*`Char` to `Boolean`*").
+the type of these functions as `Char => Boolean` (pronounced *"char to boolean"*).
 
 We can now use this function type as an argument in the refactored counting-function:
 
@@ -105,13 +104,16 @@ def count(string: String, predicate: Char => Boolean) = {
 We use this new `count` function by giving it the other functions as its arguments.
 
 ```scala
+// Can replace numberOfA
 count("abcdef", charIsA)
-count("abba", charIsA)
-count("abcdef", charIsBorC)
-count("abba", charIsBorC)
+count("abba", charIsA) 
+
+// Can replace numberOfBandC
+count("abcdef", charIsBorC) 
+count("abba", charIsBorC) 
 ```
 
-The first function (`numberOfChars`) can also be written using the new `count` function. For this we define 
+The first function (`numberOfChars`) can also be replaced by the new `count` function. For this we define 
 a function that always returns true, no matter what character it is. Then we feed this function to `count`.
 
 ```scala
@@ -120,7 +122,7 @@ count("abcdef", allChars)
 count("abba", allChars)
 ```
 
-We do not always need to define functions like 'charIsA', 'charIsBorC' and 'allChars'. You can use an anonymous 
+We do not always need to define functions like `charIsA`, `charIsBorC` and `allChars`. You can use an anonymous 
 function (also known as *lambda expression*) as well. These look exactly like the type and implementation of 
 the functions we defined above:
 
@@ -130,8 +132,8 @@ the functions we defined above:
 (c: Char) => true
 ```
 
-Basically you can think of these anonymous functions as the same functions as the ones before, but without 
-a name.
+Basically, you can think of these functions as the same functions as the ones before, but without 
+a name (hence: "anonymous")
 
 ```scala
 count("abcdef", (c: Char) => c == 'a')
@@ -140,7 +142,7 @@ count("abcdef", (c: Char) => true)
 ```
 
 In this case the compiler already knows the type of `c` since we defined it in the type definition of 
-`count`, so we do not need to write that either:
+`count`, so we do not need to write that, either:
 
 ```scala
 c => c == 'a'
