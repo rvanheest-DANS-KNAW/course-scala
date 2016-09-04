@@ -2,7 +2,7 @@ Workshop 3
 ==========
 
 In this workshop we cover collections, `Option`, `Try` and higher-order functions on these classes.
-Please, read through the material in the following order, before proceeding to the assignments.
+Please, read through the material in the following order, before proceeding to the [assignments](assignments).
 
 1. [higher-order functions](01%20higher-order-functions.md) - *getting to know what a higher-order function is, how it looks and how you use it*
 2. [some basic higher-order functions in Scala](02%20functional-operators.md)
