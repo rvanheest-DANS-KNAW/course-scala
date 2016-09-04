@@ -48,7 +48,7 @@ list.map(elem => elem * 2) // or, shorter:
 list.map(_ * 2) 
 ```
 
-`map` will apply this functional argument to every element of the list and return a list of the transformed elements. 
+`map` will apply its argument to every element of the list and return a list of the transformed elements. 
 This is different from `foreach`, which does not return anything!
 
 
@@ -65,13 +65,13 @@ list.filter(_ % 2 == 0)
 ```
 
 `filter` applies the functional argument (called *predicate*, as it returns a `Boolean`) to each element of the list and returns 
-a new list with only those elements that satisfy the predicate (i.e. for which it returns `true`)
+a new list with only those elements that satisfy the predicate (i.e. for which it returns `true`).
 
 
 Chaining Operators
 ------------------
 
-Using basic operators like `foreach`, `map` and `filter we can create more complex behavior. `
+Using basic operators like `foreach`, `map` and `filter` we can create more complex behavior.
 For example: *"square all odd elements of a list, discarding the even ones and printing each element of the result"*.
 
 ```scala
@@ -82,7 +82,7 @@ List(1, 2, 3, 4, 5, 6, 7, 8, 9)
 ```
 
 Note that we can chain operators in this way because `filter` and `map` return a new `List` themselves. 
-You cannot continue after `foreach`, as this operator returns `Unit`.
+You cannot continue after `foreach`, as this operator returns [`Unit`](http://www.scala-lang.org/api/current/index.html#scala.Unit).
 
 
 `fold`
@@ -104,8 +104,15 @@ def count(string: String, predicate: Char => Boolean): Int = {
 
 For this the collections API has defined a number of operators. Most notable here are [`foldLeft`] and [`foldRight`]. Which one to choose 
 depends entirely on what you're doing. `foldLeft` aggregates the list from left to right, whereas `foldRight` aggregates the list from 
-right to left. To do so (in both cases), these operators take two parameters: a seed value with which the aggregation is started and an 
-aggregation function which combines the seed and a value from a list into a new seed (or temporary result).
+right to left. To do so (in both cases), these operators take two parameters: 
+
+* a seed value 
+* an aggregator function
+
+The aggregator function is first applied to the seed value and the first (`foldLeft`) or last (`foldRight`) element of the list, then
+the result of that is applied to the next value, etc. The final result is the result of the last application of the aggregator.
+The following pictures, taken from Wikipedia depict this process. Not the execution in both cases proceeds from the bottom of the
+to the top.
 
 [`foldLeft`]: http://www.scala-lang.org/api/current/index.html#scala.collection.Traversable@foldLeft[B](z:B\)\(op:\(B,A\)=%3EB):B
 [`foldRight`]: http://www.scala-lang.org/api/current/index.html#scala.collection.Traversable@foldRight[B](z:B\)\(op:\(A,B\)=%3EB):B
@@ -147,25 +154,25 @@ List('a', 'b', 'c', 'd').foldLeft(0)((count, _) => count + 1)
 List('a', 'b', 'c', 'd').foldRight(0)((_, count) => count + 1)
 ```
 
-Notice that the result of subtraction is different for `foldLeft` and `foldRight`. To see what's going on we can add 
-some `println` statements to the code. Note the order in which the operations are done, starting from the left vs 
-starting from the right.
+Notice that the result of subtraction is the same for `foldLeft` and `foldRight`, but execution follows a different path
+in each case. To see what's going on we can add some `println` statements to the code. Note the order in which the operations 
+are done, starting from the left vs starting from the right.
 
 ```scala
 List(1, 2, 3, 4)
-  .foldLeft(20)((rest, i) => {
+  .foldLeft(20)((rest, i) => { // Notice the order of the pair components!
     println("foldLeft:")
     println(s"  i    = $i")
     println(s"  rest = $rest")
 
-    val res = i - rest
-    println(s"  res = i - rest = $i - $rest = $res")
+    val res = rest - i
+    println(s"  res = rest - i = $rest - $i = $res")
 
     res
   })
 
 List(1, 2, 3, 4)
-  .foldRight(20)((i, rest) => {
+  .foldRight(20)((i, rest) => { // Notice the order of the pair components!
     println("foldRight:")
     println(s"  rest = $rest")
     println(s"  i    = $i")
@@ -211,8 +218,14 @@ the first value of the input as the seed.
 def reduceLeft[B >: A](f: (B, A) => B): B
 def reduceRight[B >: A](op: (A, B) => B): B
 
+List(1, 2, 3, 4).reduceLeft((b, a) => a + b) // or, shorter
 List(1, 2, 3, 4).reduceLeft(_ + _)
 ```
+
+(Note on the shorter version: when using multiple underscores to access function parameters without naming them, each underscore represents 
+the next parameter in order, that is why you can only use them once!)
+
+(Note that you are now more limited in the aggregator functions you can use!)
 
 In case of an empty input list, these operators throw an exception, as they cannot return anything else. 
 To fix this, Scala has a variant on this, which returns an `Option[B]` instead. If the input is empty, 
