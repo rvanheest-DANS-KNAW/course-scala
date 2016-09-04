@@ -1,8 +1,9 @@
-# Option and `flatMap`
+`Option` and `flatMap`
+======================
 
 Consider the following class hierarchy and function (we leave out the implementations of the
-  methods for now). Here the methods `getBar` and `getBaz` can potentially return a `null` and
-  consequentially `compute` can return a `null` too.
+methods for now). Here the methods `getBar` and `getBaz` can potentially return a `null` and
+consequentially `compute` can return a `null` too.
 
 ```scala
 class Foo {
