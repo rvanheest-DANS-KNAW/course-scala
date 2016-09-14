@@ -14,10 +14,10 @@ v Iterable
         * geen subscribe == nothing happens!
     v subscription/unsubscribe
     v Observable.error/Observable.empty/Observable.never/Observable.from
-    + Observable.apply/create
+    v Observable.apply/create
         *
         * think about unsubscribes, subscribe, etc.
-    + Infinite-ness
+    v Infinite-ness
 - Operators
     + Marble diagram
     + map
@@ -36,6 +36,12 @@ v Iterable
     + combineLatest
     + withLatestFrom
     + zipWith
+- assignments:
+    + Observable.apply
+        * implement just/from/error/empty/never in terms of apply
+        * implement a function that pulls elements from a queue as they come in
+
+
 
 Workshop 5 - Rx continued
 - hot vs cold Observable

@@ -45,6 +45,8 @@ Infinite collections
 One great feature of `Iterable` is that it does not specify a bound on the size of the collection. While `List` and `Seq` are bounded in the sense that their size must be finite, an `Iterable` can literally have an infinite amount of elements. The only thing you need to do for this is to let `hasNext` always return `true` and make sure `next` can produce a new element every time. In the example below we create an `Iterator` inside an `Iterable` that produces a random number every time `next` is called. Using either a while-loop, for-loop or `foreach` operator you can pull an infinite amount of numbers and process them to your liking.
 
 ```scala
+import scala.util.Random
+
 def generateInfiniteCollection: Iterable[Double] = {
   new Iterable[Double] {
     def iterator = new Iterator[Double] {
