@@ -1,0 +1,40 @@
+Workshop 4 - intro to Rx
+
+v Iterable
+    v pull model (MoveNext/Current of hasNext/next)
+    v Scala operators on Iterable
+    v Infinite collections
+- Observable
+    + push based
+    + (OnNext)*(OnError|OnCompleted)?
+    + Observable.just(...)
+    + subscribe
+        * Observer
+        * 0-3 lambdas
+        * geen subscribe == nothing happens!
+    + subscription/unsubscribe
+    + Observable.error/Observable.empty/Observable.never
+    + Observable.apply/create
+        *
+        * think about unsubscribes, subscribe, etc.
+- Operators
+    + Marble diagram
+    + map
+    + filter
+    + drop
+    + take
+    + side effects with doOnNext/doOnError/doOnCompleted/doOnEach/...
+    + materialize/dematerialize
+    + buffer/slidingBuffer
+    + retry
+    + other basic operators
+- Subject
+    + both Observer and Observable
+    + PublishSubject/BehaviorSubject/...
+- Clocks and Schedulers
+    + Observable.interval
+    + Observable.timer
+    + Scheduler
+    + computation/newThread/IO/...
+- use cases
+
