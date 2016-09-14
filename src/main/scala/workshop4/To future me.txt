@@ -5,18 +5,19 @@ v Iterable
     v Scala operators on Iterable
     v Infinite collections
 - Observable
-    + push based
-    + (OnNext)*(OnError|OnCompleted)?
-    + Observable.just(...)
-    + subscribe
+    v push based
+    v (OnNext)*(OnError|OnCompleted)?
+    v Observable.just(...)
+    v subscribe
         * Observer
         * 0-3 lambdas
         * geen subscribe == nothing happens!
-    + subscription/unsubscribe
-    + Observable.error/Observable.empty/Observable.never
+    v subscription/unsubscribe
+    v Observable.error/Observable.empty/Observable.never/Observable.from
     + Observable.apply/create
         *
         * think about unsubscribes, subscribe, etc.
+    + Infinite-ness
 - Operators
     + Marble diagram
     + map
@@ -28,6 +29,23 @@ v Iterable
     + buffer/slidingBuffer
     + retry
     + other basic operators
+- Combining streams
+    + concat
+    + merge
+    + flatMap
+    + combineLatest
+    + withLatestFrom
+    + zipWith
+
+Workshop 5 - Rx continued
+- hot vs cold Observable
+    + Observable.just etc. are cold
+    + Reactive source (mouse moves) is hot
+    + implications for subscribing
+        * no subscriptions
+        * multiple subscriptions
+    + publish operator
+    + ...
 - Subject
     + both Observer and Observable
     + PublishSubject/BehaviorSubject/...
@@ -36,5 +54,6 @@ v Iterable
     + Observable.timer
     + Scheduler
     + computation/newThread/IO/...
+- ...
 - use cases
 

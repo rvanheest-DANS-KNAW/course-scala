@@ -5,7 +5,7 @@ Although we can model a lot collections by using an `Iterable`, it does not suff
 
 It should be clear that there is an important distinction between these two types of collections. On the one hand we have **interactive** collections (a subtype of `Iterable`) with which you interact by **pulling** the data from the collection. You as a *consumer* are in charge of the rate at which the elements in the collection get processed, while the *producer* of the data (the `Iterable`/`Iterator` combination) has to obey your commands and return a new element only when you want to.
 
-On the other hand we have the **reactive** collection. Examples of this can be various kinds of realtime data (mouse moves, key presses, stock price, sensor data), data that takes a long time to be computed for which you don't want to block your program flow or data that has to come from an external source (network call, file IO). These kinds of collections do not have an interactive interface and you therefore cannot pull the next element. Instead the data is **pushed** to you and you have to **react** to what you receive by processing it in some way. Therefore the *producer* is fully in charge of how fast or how slow the data is streaming towards you, while you as a *consumer* can only wait and react to what data comes in.
+On the other hand we have the **reactive** collection. Examples of this can be various kinds of real time data (mouse moves, key presses, stock price, sensor data), data that takes a long time to be computed for which you don't want to block your program flow or data that has to come from an external source (network call, file IO) for which you would normally have to block your program flow as well. These kinds of collections do not have an interactive interface and you therefore cannot pull the next element. Instead the data is **pushed** to you and you have to **react** to what you receive by processing it in some way. Therefore the *producer* is fully in charge of how fast or how slow the data is streaming towards you, while you as a *consumer* can only wait and react to what data comes in.
 
 | Collection  | Java/Scala type | Interaction | In charge |
 |-------------|-----------------|-------------|-----------|
@@ -50,6 +50,115 @@ trait Subscription {
 }
 ```
 
+In practice it turns out that you do not have to do anything with the `Subscription` in most cases. If the `Observable` terminates (either with an *OnError* or *OnCompleted* event) it will automatically unsubscribe its `Observer`s from the stream. You don't have to do anything with the `Subscription` yourself in those cases! For now we ignore this class and only bring it up when necessary.
+
+
 Streams of values
 -----------------
-TODO continue here
+With these three interfaces in place we can now start creating streams of values. Although most use cases of reactive collections are in real time data and nonblocking calculations/IO, it turns out that you can also use interactive collections as the source of a stream. In this case the `Observable` emit the elements of the `Iterable` one by one and consider them as events/data that is pushed to the `Observer`. Using an interactive source is especially useful for practicing as you have full control over the source.
+
+### Your first `Observable`
+The most simple `Observable` is the one that emits a number of values as *OnNext* events and finishes with an *OnCompleted* event.
+
+```scala
+val emit123: Observable[Int] = Observable.just(1, 2, 3)
+```
+
+However, when you compile and run this code... nothing happens. That is because nobody is listening. These values in `just(1, 2, 3)` will only be emitted if someone (a.k.a. at least one `Observer`) is actually listening to the stream. If nobody listens, nothing happens!
+
+> (side note: there is a distinction between hot and cold streams (a.k.a. broadcasting vs. lazy), but we will get to that in workshop 5; for this workshop we only consider one `Observer` per stream)
+
+To listen to a stream, we of course have to implement an `Observer`. In the code below we do this by printing custom messages for each of the three event types. For each value that is emitted by the `Observable` (`1`, `2` and `3`) the `onNext` method is executed, after which `onCompleted` is called. Note that even though we implemented `onError` here, this method is never called!
+
+```scala
+def observer: Observer[Int] = new Observer[Int] {
+  override def onNext(value: Int) = println(s"received onNext event with value: $value")
+
+  override def onError(error: Throwable) = println(s"""received onError event of type ${error.getClass.getSimpleName} and message "${error.getMessage}"""")
+
+  override def onCompleted() = println("received onCompleted event")
+}
+```
+
+Now calling `emit123.subscribe(observer)` with give the following output:
+
+```
+received onNext event with value: 1
+received onNext event with value: 2
+received onNext event with value: 3
+received onCompleted event
+```
+
+If you're following along by typing code: :bouquet::bouquet::bouquet: **Congratulations, you have made your first subscription!!!** :bouquet::bouquet::bouquet:
+
+### Other primative streams
+As we just saw, you can create a stream with hardcoded elements using `Observable.just`. However, in some cases you may prefer the source to be any arbitrary interactive collection that can be created or calculated on runtime. For this you use `Observable.from` instead. You can supply any `Iterable` or one of its many subtypes as the argument of this function.
+
+```scala
+val emitFromList: Observable[Int] = Observable.from(List(1, 2, 3, 4))
+emitFromList.subscribe(observer)
+```
+
+Using the `Observer` as defined above, we get the output below. Notice again that for each element in the collection the `onNext` is called, followed by `onCompleted` at the end of the whole sequence.
+
+```
+received onNext event with value: 1
+received onNext event with value: 2
+received onNext event with value: 3
+received onNext event with value: 4
+received onCompleted event
+```
+
+Another primative stream is the `Observable` that only emits an *OnError* event. Use the `Observable.error` for this with an instance of `Throwable` as its argument. This stream does not emit any values but only terminates with an exception.
+
+```scala
+val emitError: Observable[Int] = Observable.error(new Exception("something went wrong"))
+emitError.subscribe(observer)
+```
+
+This will generate the following output in the console:
+
+```
+received onError event of type Exception and message "something went wrong"
+```
+
+The obvious counterpart of `Observable.error` is `Observable.empty`, which also does not emit no values and only terminates naturally with an *OnCompleted*.
+
+```scala
+val emitEmpty: Observable[Int] = Observable.empty
+emitEmpty.subscribe(observer)
+```
+
+This of course gives the following console output:
+
+```
+received onCompleted event
+```
+
+Finally, we can also create a stream that does completely nothing: it does not emit any elements with *OnNext*, nor does it terminate with *OnError* or *OnCompleted*. It will just run *forever* without doing anything! <sup>(my favorite `Observable`)</sup> You can of course subscribe to this `Observable`, but you will never see any output with it.
+
+```scala
+val emitNever: Observable[Int] = Observable.never
+emitNever.subscribe(observer)
+```
+
+### Anonymous `Observer`
+Until now we have used an `Observer` instance that has to override and implement the `onNext`, `onError` and `onCompleted` methods. Then we passed in this `Observer` to the `subscribe` method on `Observable`. However, we can also do this in a different way, by passing the three implementations as lambda expressions to the `subscribe` method. In this case the `subscribe` will create the `Observer` for you and pass it on to `subscribe(observer)`.
+
+```scala
+Observable.just(1, 2, 3).subscribe(
+    value => println(s"received onNext event with value: $value"),
+    error => println(s"""received onError event of type ${error.getClass.getSimpleName} and message "${error.getMessage}""""),
+    () => println("received onCompleted event")
+)
+```
+
+Similarly we do not always need the implementation for all three event handlers. If we only want to handle the *OnNext* events and discard the *OnError* and *OnCompleted* events, we only provide the first lambda expression. Note that these events still happen, but that you just do not handle them!
+
+```scala
+Observable.just(1, 2, 3).subscribe(value => println(s"received onNext event with value: $value"))
+```
+
+Creating a custom `Observable`
+------------------------------
+TODO continue here with `Observable.create`/`Observable.apply`
