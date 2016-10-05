@@ -7,11 +7,11 @@ Discard every third element
 4. One of the operators you have used, may or may not have been either [`Observable.take`] or [`Observable.dropRight`]. Given their respective marble diagrams, argue if it matters which one to use, and if so argue which of these is the best one to use for this case.
 5. You have implemented `discardThird` using both `buffer` and `window`. Using the marble diagrams of these respective operators, argue which one is the best one to use. Hint: think about at which time each elements gets emitted in the respective cases.
 
-[RxJava's `buffer` operators]: 
+[RxJava's `buffer` operators]: http://reactivex.io/RxJava/javadoc/rx/Observable.html#buffer(rx.functions.Func0)
 [RxScala equivalent]: http://reactivex.io/rxscala/comparison.html
 [`flatMapIterable`]: http://reactivex.io/RxJava/javadoc/rx/Observable.html#flatMapIterable(rx.functions.Func1)
 [`Seq.take`]: http://www.scala-lang.org/api/current/index.html#scala.collection.Seq@take(n:Int):Repr
 [`Seq.dropRight`]: http://www.scala-lang.org/api/current/index.html#scala.collection.Seq@dropRight(n:Int):Repr
-[RxJava's `window` operators]: http://reactivex.io/RxJava/javadoc/rx/Observable.html#buffer(rx.functions.Func0)
+[RxJava's `window` operators]: http://reactivex.io/RxJava/javadoc/rx/Observable.html#window(rx.functions.Func0)
 [`Observable.take`]: http://reactivex.io/rxscala/scaladoc/index.html#rx.lang.scala.Observable@take(n:Int):rx.lang.scala.Observable[T]
 [`Observable.dropRight`]: http://reactivex.io/rxscala/scaladoc/index.html#rx.lang.scala.Observable@dropRight(n:Int):rx.lang.scala.Observable[T]
