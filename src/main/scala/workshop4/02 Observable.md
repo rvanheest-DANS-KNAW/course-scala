@@ -203,3 +203,47 @@ def getEvent[T <: InputEvent](node: Node, event: EventType[T]): Observable[T] = 
 
 [generally advised]: http://stackoverflow.com/a/36173021/2389405
 [RxJavaFx]: https://github.com/ReactiveX/RxJavaFX
+
+RxJava vs. RxScala
+------------------
+There are many libraries that make use of reactive programming these days. Most of them, however, are written in Java and therefore expose the RxJava `Observable` rather than the RxScala one. There are some slight syntactical differences between RxJava and RxScala. One of them, as we have already seen, is `Observable.create` vs. `Observable.apply`. Other differences, as we will see in the rest of this workshop, are listed on the [RxScala comparison page].
+
+Conversion between RxJava and RxScala can be done (as of RxScala_2.11, v0.26.3) using the `asScala` and `asJava` operators as shown below. *Note that you have to do an extra import to get this working!*
+
+```scala
+import rx.lang.scala.JavaConverters
+
+def javaObservableToScalaObservableConverter(): Unit = {
+
+  // given a RxJava Observable (for example from some third party library) ...
+  def getJavaObservableFromSomewhere: rx.Observable[Int] ={
+    rx.Observable.just(1, 2, 3)
+  }
+
+  // ... it is possible to transform this into a RxScala Observable using `asScala`.
+  getJavaObservableFromSomewhere
+    .asScala
+    .subscribe(println, _.printStackTrace(), () => println("done"))
+}
+
+def scalaObservableToJavaObservableConverter(): Unit = {
+
+  // given a function that takes a RxJava Observable as its input and returns a RxJava Subscription ...
+  def useJavaObservableSomewhere(obs: rx.Observable[_ <: Int]): rx.Subscription = {
+    obs.subscribe(new Action1[Int] { override def call(i: Int): Unit = println(i) }) // RxJava requires an Action1 object here rather than a lambda expression.
+  }
+
+  val scalaObservable: Observable[Int] = Observable.just(1, 2, 3)
+
+  // ... you can give a RxScala Observable as input and call `asJava`on it ...
+  val javaSubscription: rx.Subscription = useJavaObservableSomewhere(scalaObservable.asJava)
+
+   // ... after which you get a RxJava Subscription back, which can be used again in a RxScala setting using `asScalaSubscription` ...
+  val scalaSubscription: Subscription = javaSubscription.asScalaSubscription
+
+  // ... and convert it back to a RxJava Subscription using `asJavaSubscription`.
+  val javaSubscriptionAgain: rx.Subscription = scalaSubscription.asJavaSubscription
+}
+```
+ 
+[RxScala comparison page]: http://reactivex.io/rxscala/comparison.html
