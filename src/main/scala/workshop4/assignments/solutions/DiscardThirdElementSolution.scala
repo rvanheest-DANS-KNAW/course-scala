@@ -1,4 +1,4 @@
-package workshop4.assignments
+package workshop4.assignments.solutions
 
 import rx.lang.scala.Observable
 
@@ -6,14 +6,22 @@ import scala.concurrent.duration.DurationInt
 import scala.io.StdIn
 import scala.language.postfixOps
 
-trait DiscardThirdElement {
+trait DiscardThirdElementSolution {
 
-  def discardThirdBuffer[T](obs: Observable[T]): Observable[T] = ???
+  def discardThirdBuffer[T](obs: Observable[T]): Observable[T] = {
+    obs.tumblingBuffer(3)
+      .flatMapIterable(_.take(2))
+//      .flatMapIterable(_.dropRight(1))
+  }
 
-  def discardThirdWindow[T](obs: Observable[T]): Observable[T] = ???
+  def discardThirdWindow[T](obs: Observable[T]): Observable[T] = {
+    obs.tumbling(3)
+      .flatMap(_.take(2))
+//      .flatMap(_.dropRight(1))
+  }
 }
 
-object DiscardThirdElementWithBuffer extends App with DiscardThirdElement {
+object DiscardThirdElementWithBuffer extends App with DiscardThirdElementSolution {
 
   println("discard every third element using buffer")
 
@@ -21,7 +29,7 @@ object DiscardThirdElementWithBuffer extends App with DiscardThirdElement {
     .subscribe(println(_), e => e.printStackTrace(), () => println("done"))
 }
 
-object DiscardThirdElementWithBufferAndInterval extends App with DiscardThirdElement {
+object DiscardThirdElementWithBufferAndInterval extends App with DiscardThirdElementSolution {
 
   println("discard every third element using buffer")
 
@@ -31,7 +39,7 @@ object DiscardThirdElementWithBufferAndInterval extends App with DiscardThirdEle
   StdIn.readLine()
 }
 
-object DiscardThirdElementWithWindow extends App with DiscardThirdElement {
+object DiscardThirdElementWithWindow extends App with DiscardThirdElementSolution {
 
   println("discard every third element using window")
 
@@ -39,7 +47,7 @@ object DiscardThirdElementWithWindow extends App with DiscardThirdElement {
     .subscribe(println(_), e => e.printStackTrace(), () => println("done"))
 }
 
-object DiscardThirdElementWithWindowAndInterval extends App with DiscardThirdElement {
+object DiscardThirdElementWithWindowAndInterval extends App with DiscardThirdElementSolution {
 
   println("discard every third element using window")
 
