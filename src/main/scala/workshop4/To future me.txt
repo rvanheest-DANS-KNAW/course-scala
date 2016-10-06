@@ -18,6 +18,7 @@ v Iterable
         *
         * think about unsubscribes, subscribe, etc.
     v Infinite-ness
+    - RxJava vs RxScala
 - Operators
     + Marble diagram
     + map
