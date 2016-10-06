@@ -8,7 +8,6 @@ Have a look at the [ReactiveX] GitHub organisation, as well as repositories by [
 Here is a list of some of the projects you may want to take a look at (in no particular order):
 
 * [RxJavaString](https://github.com/ReactiveX/RxJavaString)
-* [RxNetty](https://github.com/ReactiveX/RxNetty)
 * [RxJavaFx](https://github.com/ReactiveX/RxJavaFX)
 * [RxApacheHttp](https://github.com/ReactiveX/RxApacheHttp)
 * [RxJavaMath](https://github.com/ReactiveX/RxJavaMath)
@@ -16,7 +15,6 @@ Here is a list of some of the projects you may want to take a look at (in no par
 * [RxJava-file](https://github.com/davidmoten/rxjava-file)
 * [RxJava-extras](https://github.com/davidmoten/rxjava-extras)
 * [RxJava-jdbc](https://github.com/davidmoten/rxjava-jdbc)
-* [RxJava-aws](https://github.com/davidmoten/rxjava-aws)
 * [RxJava-slf4j](https://github.com/davidmoten/rxjava-slf4j)
 
 [ReactiveX]: https://github.com/reactivex
