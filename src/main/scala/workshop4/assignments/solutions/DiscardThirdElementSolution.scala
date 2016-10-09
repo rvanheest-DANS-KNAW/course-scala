@@ -8,6 +8,8 @@ import scala.language.postfixOps
 
 trait DiscardThirdElementSolution {
 
+  // comment and uncomment the choices below to see the differences
+
   def discardThirdBuffer[T](obs: Observable[T]): Observable[T] = {
     obs.tumblingBuffer(3)
       .flatMapIterable(_.take(2))
