@@ -46,7 +46,7 @@ object RxJavaStringUsing extends App {
   }
 
   lazy val fis = new FileInputStream(new File(getClass.getResource("/workshop4/LorumIpsum.txt").toURI))
-  val bytes = StringObservable.using[Array[Byte], FileInputStream](() => fis, StringObservable.from)
+  val bytes = StringObservable.using[Array[Byte], FileInputStream](() => fis, (in: FileInputStream) => StringObservable.from(in))
 
   bytes.asScala
     .map(new String(_))
@@ -69,7 +69,7 @@ object RxJavaStringDecode extends App {
   }
 
   lazy val fis = new FileInputStream(new File(getClass.getResource("/workshop4/LorumIpsum.txt").toURI))
-  val bytes = StringObservable.using[Array[Byte], FileInputStream](() => fis, StringObservable.from)
+  val bytes = StringObservable.using[Array[Byte], FileInputStream](() => fis, (in: FileInputStream) => StringObservable.from(in))
   val string = StringObservable.decode(bytes, StandardCharsets.UTF_8)
 
   string.asScala
@@ -91,7 +91,7 @@ object RxJavaStringConcat extends App {
   }
 
   lazy val fis = new FileInputStream(new File(getClass.getResource("/workshop4/LorumIpsum.txt").toURI))
-  val bytes = StringObservable.using[Array[Byte], FileInputStream](() => fis, StringObservable.from)
+  val bytes = StringObservable.using[Array[Byte], FileInputStream](() => fis, (in: FileInputStream) => StringObservable.from(in))
   val string = StringObservable.decode(bytes, StandardCharsets.UTF_8)
   val concat = StringObservable.stringConcat(string)
 
@@ -152,7 +152,7 @@ object RxJavaStringByLine extends App {
   }
 
   lazy val fis = new FileInputStream(new File(getClass.getResource("/workshop4/LorumIpsum.txt").toURI))
-  val bytes = StringObservable.using[Array[Byte], FileInputStream](() => fis, StringObservable.from)
+  val bytes = StringObservable.using[Array[Byte], FileInputStream](() => fis, (in: FileInputStream) => StringObservable.from(in))
   val string = StringObservable.decode(bytes, StandardCharsets.UTF_8)
   val lines = StringObservable.byLine(string)
 
@@ -175,7 +175,7 @@ object RxJavaStringByCharacter extends App {
   }
 
   lazy val fis = new FileInputStream(new File(getClass.getResource("/workshop4/LorumIpsum.txt").toURI))
-  val bytes = StringObservable.using[Array[Byte], FileInputStream](() => fis, StringObservable.from)
+  val bytes = StringObservable.using[Array[Byte], FileInputStream](() => fis, (in: FileInputStream) => StringObservable.from(in))
   val string = StringObservable.decode(bytes, StandardCharsets.UTF_8)
   val chars = StringObservable.byCharacter(string)
 
