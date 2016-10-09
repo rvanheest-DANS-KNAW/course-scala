@@ -4,8 +4,7 @@ import java.io.{File, FileInputStream}
 import java.nio.charset.StandardCharsets
 
 import rx.observables.StringObservable
-import rx.lang.scala.JavaConversions._
-import rx.lang.scala.ImplicitFunctionConversions._
+import rx.lang.scala.JavaConverters._
 import rx.lang.scala.Observable
 import rx.observables.StringObservable.UnsafeFunc0
 
@@ -16,13 +15,17 @@ object RxJavaStringFromInputStream extends App {
   /*
     StringObservable.from() reads from an InputStream by taking chunks in memory and processing them before getting the next chunk.
     By default a chunk is 8 * 1024 bytes, but you can give your own size as an extra parameter.
+
+    Remember to close the InputStream after you're done!
    */
 
   val fis = new FileInputStream(new File(getClass.getResource("/workshop4/LorumIpsum.txt").toURI))
   val bytes = StringObservable.from(fis)
-  toScalaObservable(bytes)
+
+  bytes.asScala
     .map(new String(_))
-    .subscribe(x => println(s"chunk: $x\n\n\n"))
+    .subscribe(x => println(s">>> CHUNK: $x\n\n\n"))
+
   fis.close()
 }
 
@@ -36,16 +39,18 @@ object RxJavaStringUsing extends App {
     The example below does the same as in RxJavaStringFromInputStream above, but does the resource closing by itself.
    */
 
+  import rx.lang.scala.ImplicitFunctionConversions._
+
   implicit def funcToUnsafeFunc0[T](fun: () => T): UnsafeFunc0[T] = new UnsafeFunc0[T] {
     def call(): T = fun()
   }
 
   lazy val fis = new FileInputStream(new File(getClass.getResource("/workshop4/LorumIpsum.txt").toURI))
-  val bytes = StringObservable.using[Array[Byte], FileInputStream](() => fis, (is: FileInputStream) => StringObservable.from(is))
+  val bytes = StringObservable.using[Array[Byte], FileInputStream](() => fis, StringObservable.from)
 
-  toScalaObservable(bytes)
+  bytes.asScala
     .map(new String(_))
-    .subscribe(x => println(s"chunk: $x\n\n\n"))
+    .subscribe(x => println(s">>> CHUNK: $x\n\n\n"))
 }
 
 object RxJavaStringDecode extends App {
@@ -57,15 +62,18 @@ object RxJavaStringDecode extends App {
     StringObservable.encode (not listed here) does the opposite: it takes an Observable[String] and returns an Observable[Array[Byte]].
    */
 
+  import rx.lang.scala.ImplicitFunctionConversions._
+
   implicit def funcToUnsafeFunc0[T](fun: () => T): UnsafeFunc0[T] = new UnsafeFunc0[T] {
     def call(): T = fun()
   }
 
   lazy val fis = new FileInputStream(new File(getClass.getResource("/workshop4/LorumIpsum.txt").toURI))
-  val bytes = StringObservable.using[Array[Byte], FileInputStream](() => fis, (is: FileInputStream) => StringObservable.from(is))
+  val bytes = StringObservable.using[Array[Byte], FileInputStream](() => fis, StringObservable.from)
   val string = StringObservable.decode(bytes, StandardCharsets.UTF_8)
-  toScalaObservable(string)
-    .subscribe(x => println(s"chunk: $x\n\n\n"))
+
+  string.asScala
+    .subscribe(x => println(s">>> CHUNK: $x\n\n\n"))
 }
 
 object RxJavaStringConcat extends App {
@@ -76,15 +84,18 @@ object RxJavaStringConcat extends App {
     loading the whole input file into memory and emitting it as one element in an onNext.
    */
 
+  import rx.lang.scala.ImplicitFunctionConversions._
+
   implicit def funcToUnsafeFunc0[T](fun: () => T): UnsafeFunc0[T] = new UnsafeFunc0[T] {
     def call(): T = fun()
   }
 
   lazy val fis = new FileInputStream(new File(getClass.getResource("/workshop4/LorumIpsum.txt").toURI))
-  val bytes = StringObservable.using[Array[Byte], FileInputStream](() => fis, (is: FileInputStream) => StringObservable.from(is))
+  val bytes = StringObservable.using[Array[Byte], FileInputStream](() => fis, StringObservable.from)
   val string = StringObservable.decode(bytes, StandardCharsets.UTF_8)
   val concat = StringObservable.stringConcat(string)
-  toScalaObservable(concat)
+
+  concat.asScala
     .subscribe(println(_))
 }
 
@@ -101,9 +112,10 @@ object RxJavaStringSplit extends App {
    */
 
   val strings = Observable.just("Lorum ip", "sum dolo", "r sit am", "et, cons")
-  val jStrings: rx.Observable[String] = toJavaObservable(strings).cast(classOf[String])
+  val jStrings: rx.Observable[String] = strings.asJava.cast(classOf[String])
   val words = StringObservable.split(jStrings, " ")
-  toScalaObservable(words)
+
+  words.asScala
     .subscribe(word => println(s"word: $word"))
 }
 
@@ -115,9 +127,10 @@ object RxJavaStringJoin extends App {
    */
 
   val strings = Observable.just("abc", "def", "ghi")
-  val jStrings: rx.Observable[String] = toJavaObservable(strings).cast(classOf[String])
+  val jStrings: rx.Observable[String] = strings.asJava.cast(classOf[String])
   val joined = StringObservable.join(jStrings, " - ")
-  toScalaObservable(joined)
+
+  joined.asScala
     .subscribe(println(_))
 }
 
@@ -132,15 +145,18 @@ object RxJavaStringByLine extends App {
     nonempty lines remain.
    */
 
+  import rx.lang.scala.ImplicitFunctionConversions._
+
   implicit def funcToUnsafeFunc0[T](fun: () => T): UnsafeFunc0[T] = new UnsafeFunc0[T] {
     def call(): T = fun()
   }
 
   lazy val fis = new FileInputStream(new File(getClass.getResource("/workshop4/LorumIpsum.txt").toURI))
-  val bytes = StringObservable.using[Array[Byte], FileInputStream](() => fis, (is: FileInputStream) => StringObservable.from(is))
+  val bytes = StringObservable.using[Array[Byte], FileInputStream](() => fis, StringObservable.from)
   val string = StringObservable.decode(bytes, StandardCharsets.UTF_8)
   val lines = StringObservable.byLine(string)
-  toScalaObservable(lines)
+
+  lines.asScala
     .filterNot(_.isEmpty)
     .subscribe(line => println(s"line: $line"))
 }
@@ -152,14 +168,17 @@ object RxJavaStringByCharacter extends App {
     a single character.
    */
 
+  import rx.lang.scala.ImplicitFunctionConversions._
+
   implicit def funcToUnsafeFunc0[T](fun: () => T): UnsafeFunc0[T] = new UnsafeFunc0[T] {
     def call(): T = fun()
   }
 
   lazy val fis = new FileInputStream(new File(getClass.getResource("/workshop4/LorumIpsum.txt").toURI))
-  val bytes = StringObservable.using[Array[Byte], FileInputStream](() => fis, (is: FileInputStream) => StringObservable.from(is))
+  val bytes = StringObservable.using[Array[Byte], FileInputStream](() => fis, StringObservable.from)
   val string = StringObservable.decode(bytes, StandardCharsets.UTF_8)
   val chars = StringObservable.byCharacter(string)
-  toScalaObservable(chars)
+
+  chars.asScala
     .subscribe(character => println(s"character: $character\n"))
 }

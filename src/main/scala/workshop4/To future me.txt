@@ -4,7 +4,7 @@ v Iterable
     v pull model (MoveNext/Current of hasNext/next)
     v Scala operators on Iterable
     v Infinite collections
-- Observable
+v Observable
     v push based
     v (OnNext)*(OnError|OnCompleted)?
     v Observable.just(...)
@@ -18,15 +18,15 @@ v Iterable
         *
         * think about unsubscribes, subscribe, etc.
     v Infinite-ness
-    - RxJava vs RxScala
+    v RxJava vs RxScala
 - Operators
     + Marble diagram
     + map
     + filter
+    + distinct/distinctUntilChanged
     + drop
     + take
     + side effects with doOnNext/doOnError/doOnCompleted/doOnEach/...
-    + materialize/dematerialize
     + buffer/slidingBuffer
     + retry
     + other basic operators

@@ -211,7 +211,7 @@ There are many libraries that make use of reactive programming these days. Most 
 Conversion between RxJava and RxScala can be done (as of RxScala_2.11, v0.26.3) using the `asScala` and `asJava` operators as shown below. *Note that you have to do an extra import to get this working!*
 
 ```scala
-import rx.lang.scala.JavaConverters
+import rx.lang.scala.JavaConverters._
 
 def javaObservableToScalaObservableConverter(): Unit = {
 

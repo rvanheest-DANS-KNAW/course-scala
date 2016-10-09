@@ -1,10 +1,10 @@
-import javafx.event.{Event, EventHandler, EventType}
+import javafx.event.{EventHandler, EventType}
 import javafx.scene.Node
 import javafx.scene.input.InputEvent
 
 import rx.functions.Action1
 import rx.lang.scala.{Observable, Observer, Subscription}
-import rx.lang.scala.JavaConverters
+import rx.lang.scala.JavaConverters._
 
 import scala.language.implicitConversions
 import scala.util.Random
