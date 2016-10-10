@@ -8,8 +8,22 @@ import scala.language.postfixOps
 
 trait DiscardThirdElement {
 
+  /**
+   * Given an `Observable[T]` called `obs`, returns an `Observable[T]` that skips every third element that is emitted by `obs`.
+   *
+   * @param obs the input `Observable`
+   * @tparam T the type of elements in the `Observable`
+   * @return an `Observable` that skips every third element emitted by `obs`
+   */
   def discardThirdBuffer[T](obs: Observable[T]): Observable[T] = ???
 
+  /**
+   * Given an `Observable[T]` called `obs`, returns an `Observable[T]` that skips every third element that is emitted by `obs`.
+   *
+   * @param obs the input `Observable`
+   * @tparam T the type of elements in the `Observable`
+   * @return an `Observable` that skips every third element emitted by `obs`
+   */
   def discardThirdWindow[T](obs: Observable[T]): Observable[T] = ???
 }
 

@@ -10,12 +10,26 @@ trait DiscardThirdElementSolution {
 
   // comment and uncomment the choices below to see the differences
 
+  /**
+   * Given an `Observable[T]` called `obs`, returns an `Observable[T]` that skips every third element that is emitted by `obs`.
+   *
+   * @param obs the input `Observable`
+   * @tparam T the type of elements in the `Observable`
+   * @return an `Observable` that skips every third element emitted by `obs`
+   */
   def discardThirdBuffer[T](obs: Observable[T]): Observable[T] = {
     obs.tumblingBuffer(3)
       .flatMapIterable(_.take(2))
 //      .flatMapIterable(_.dropRight(1))
   }
 
+  /**
+   * Given an `Observable[T]` called `obs`, returns an `Observable[T]` that skips every third element that is emitted by `obs`.
+   *
+   * @param obs the input `Observable`
+   * @tparam T the type of elements in the `Observable`
+   * @return an `Observable` that skips every third element emitted by `obs`
+   */
   def discardThirdWindow[T](obs: Observable[T]): Observable[T] = {
     obs.tumbling(3)
       .flatMap(_.take(2))
