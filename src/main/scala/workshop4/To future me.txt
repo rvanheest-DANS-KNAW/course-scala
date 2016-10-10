@@ -38,9 +38,11 @@ v Observable
     + withLatestFrom
     + zipWith
 - assignments:
-    + Observable.apply
-        * implement just/from/error/empty/never in terms of apply
-        * implement a function that pulls elements from a queue as they come in
+    + skip every third element in an Observable
+    + Pi approximation
+    + DictionarySuggestion (combining streams, doing REST call, NO schedulers)
+    + ...
+    + Rx ecosystem (discuss some related projects that add extra functionality)
 
 
 
