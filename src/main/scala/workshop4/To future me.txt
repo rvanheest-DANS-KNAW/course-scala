@@ -38,11 +38,10 @@ v Observable
     + withLatestFrom
     + zipWith
 - assignments:
-    + skip every third element in an Observable
-    + Pi approximation
-    + DictionarySuggestion (combining streams, doing REST call, NO schedulers)
-    + ...
-    + Rx ecosystem (discuss some related projects that add extra functionality)
+    v skip every third element in an Observable
+    v Pi approximation
+    v DictionarySuggestion (combining streams, doing REST call, NO schedulers)
+    v Rx ecosystem (discuss some related projects that add extra functionality)
 
 
 
