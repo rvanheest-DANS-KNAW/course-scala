@@ -1,19 +1,19 @@
 package workshop3.test
 
-import java.io.File
+import java.io.{BufferedInputStream, File}
 
 import org.scalatest.{FlatSpec, Matchers, OneInstancePerTest}
-import resource.Using
-import workshop3.assignments.solutions.FileIOSolution
+import resource.{ManagedResource, Using}
 import workshop3.assignments.{Customer, Order, Product}
+import workshop3.assignments.solutions.FileIO
 
 class FileIOSpec extends FlatSpec with Matchers with OneInstancePerTest {
 
-  val fileIO = FileIOSolution
+  def mis(s: String): ManagedResource[BufferedInputStream] =
+    Using.fileInputStream(new File(getClass.getResource(s).toURI))
 
   "readCustomers" should "read a customer input and convert it to the appropriate objects" in {
-    val file = new File(getClass.getResource("/workshop3/testcustomerinput.csv").toURI)
-    val customers = Using.fileInputStream(file).acquireAndGet(fileIO.readCustomers)
+    val customers = mis("/workshop3/testcustomerinput.csv").acquireAndGet(FileIO.readCustomers)
 
     customers should contain (Customer("123","Alice", "Anderson"))
     customers should contain (Customer("456","Bob", "Baboon"))
@@ -22,8 +22,7 @@ class FileIOSpec extends FlatSpec with Matchers with OneInstancePerTest {
   }
 
   "readProducts" should "read a product input and convert it to the appropriate objects" in {
-    val file = new File(getClass.getResource("/workshop3/testproductinput.csv").toURI)
-    val products = Using.fileInputStream(file).acquireAndGet(fileIO.readProducts)
+    val products = mis("/workshop3/testproductinput.csv").acquireAndGet(FileIO.readProducts)
 
     products should contain (Product("12345", "product1", 123.57))
     products should contain (Product("23456", "product2", 234.68))
@@ -34,8 +33,7 @@ class FileIOSpec extends FlatSpec with Matchers with OneInstancePerTest {
   }
 
   "readOrders" should "read an order input and convert it to the appropriate objects" in {
-    val file = new File(getClass.getResource("/workshop3/testorderinput.csv").toURI)
-    val orders = Using.fileInputStream(file).acquireAndGet(fileIO.readOrders)
+    val orders = mis("/workshop3/testorderinput.csv").acquireAndGet(FileIO.readOrders)
 
     orders should contain (Order("34567", "123", 5))
     orders should contain (Order("12345", "123", 1))
@@ -43,5 +41,32 @@ class FileIOSpec extends FlatSpec with Matchers with OneInstancePerTest {
     orders should contain (Order("67890", "456", 3))
     orders should contain (Order("67890", "123", 1))
     orders should contain (Order("34567", "789", 3))
+  }
+
+  "report1" should "write some lines" in {
+    val orders = mis("/workshop3/testorderinput.csv").acquireAndGet(FileIO.readOrders)
+    val products = mis("/workshop3/testproductinput.csv").acquireAndGet(FileIO.readProducts)
+    val customers = mis("/workshop3/testcustomerinput.csv").acquireAndGet(FileIO.readCustomers)
+    val report = FileIO.report1(orders, products, customers)
+
+    report should contain theSameElementsAs List(
+      "Alice Anderson wants 1 x product1",
+      "Alice Anderson wants 5 x product3",
+      "Alice Anderson wants 1 x product6",
+      "Bob Baboon wants 3 x product6",
+      "Chris Carlson wants 2 x product2",
+      "Chris Carlson wants 3 x product3")
+  }
+
+  "report2" should "write some lines" in {
+    val orders = mis("/workshop3/testorderinput.csv").acquireAndGet(FileIO.readOrders)
+    val products = mis("/workshop3/testproductinput.csv").acquireAndGet(FileIO.readProducts)
+    val customers = mis("/workshop3/testcustomerinput.csv").acquireAndGet(FileIO.readCustomers)
+    val report = FileIO.report2(orders, products, customers)
+
+    report should contain theSameElementsAs List(
+      "Bob Baboon has to pay 2034.06",
+      "Alice Anderson has to pay 2530.54",
+      "Chris Carlson has to pay 1506.73")
   }
 }
