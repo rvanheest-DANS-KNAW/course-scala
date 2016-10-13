@@ -37,7 +37,7 @@ v Observable
     + combineLatest
     + withLatestFrom
     + zipWith
-- assignments:
+v assignments:
     v skip every third element in an Observable
     v Pi approximation
     v DictionarySuggestion (combining streams, doing REST call, NO schedulers)
