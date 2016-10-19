@@ -8,3 +8,4 @@ Please, read through the material in the following order, before proceeding to t
 
 1. [Interactive collections](01%20Iterable.md) - *A brief looking back on the previous workshop and interactive collections*
 2. [Reactive collections](02%20Observable.md) - *Introducing reactive programming, reactive collections and the basics of Rx*
+3. [Operators](03%20Operators.md) - *An overview of some basic operators on `Observable`s*
