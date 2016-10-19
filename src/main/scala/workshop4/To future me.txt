@@ -25,7 +25,7 @@ v Observable
     v map
     v distinct/distinctUntilChanged
     v drop/dropWhile (skip in RxJava)
-    + take/takeWhile
+    v take/takeWhile
     + side effects with doOnNext/doOnError/doOnCompleted/doOnEach/...
     + buffer/slidingBuffer
     + retry

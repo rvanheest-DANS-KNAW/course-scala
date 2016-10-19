@@ -40,3 +40,7 @@ Observable.just(1, 2, 3, 4, 5)
 Observable.just(1, 2, 3, 4, 5)
   .dropWhile(i => i < 3)
   .subscribe(i => println(i))
+
+Observable.just(0, 1, 2, 3, 4)
+  .take(3)
+  .subscribe(i => println(i))

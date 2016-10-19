@@ -118,6 +118,8 @@ Observable.just("a", "abc", "ab", "aaa", "b")
 
 ![distinct](https://raw.githubusercontent.com/wiki/ReactiveX/RxJava/images/rx-operators/distinct.png)
 
+---
+
 ![distinct-with-selector](https://raw.githubusercontent.com/wiki/ReactiveX/RxJava/images/rx-operators/distinct.key.png)
 
 Regarding `distinctUntilChanged` we have the same kinds of operators, [with] and [without] a selector:
@@ -136,6 +138,9 @@ Observable.just("a", "b", "ab", "abc", "bc")
 [without]: http://reactivex.io/rxscala/scaladoc/index.html#rx.lang.scala.Observable@distinctUntilChanged:rx.lang.scala.Observable[T]
 
 ![distinctUntilChanged](https://raw.githubusercontent.com/wiki/ReactiveX/RxJava/images/rx-operators/distinctUntilChanged.png)
+
+---
+
 ![distinctUntilChanged-with-selector](https://raw.githubusercontent.com/wiki/ReactiveX/RxJava/images/rx-operators/distinctUntilChanged.key.png)
 
 As a final example, `distinct` is used in the [`jobMonitor`] in [`easy-ingest-dispatcher`]. Here every couple of seconds a list of all files and folders in the `depositsDirectory` is asked from the filesystem. However, we are only interested in the ones that were just added. Given the `Observable[File]` we gained before, we can then do a `distinct(_.getName)` where we check the distinctness of the `File`'s name.
@@ -181,3 +186,26 @@ Observable.just(1, 2, 3, 4, 5)
   .subscribe(i => println(i))
 // prints: 3, 4, 5
 ```
+
+
+`take`
+------
+
+Similar to `drop`, there is a [`take(n)`] operator which only keeps the first `n` elements of the stream and drops all elements after that. Notice in the diagram below that, because after `n` elements no more elements will follow, the `Observable` completes earlier than usual, that is: immediately after the `n`th element is emitted.
+
+[`take(n)`]: http://reactivex.io/rxscala/scaladoc/index.html#rx.lang.scala.Observable@take(n:Int):rx.lang.scala.Observable[T]
+
+![take](https://raw.githubusercontent.com/wiki/ReactiveX/RxJava/images/rx-operators/take.png)
+
+```scala
+Observable.just(0, 1, 2, 3, 4)
+  .take(3)
+  .subscribe(i => println(i))
+// prints: 0, 1, 2
+```
+
+Similar to a `dropWhile` there is a [`takeWhile`] that takes a predicate and returns a stream with all elements of the original stream as long as the predicate stays `true`. Once the predicate becomes `false` on an element, the stream completes and no more elements are evaluated.
+
+[`takeWhile`]: http://reactivex.io/rxscala/scaladoc/index.html#rx.lang.scala.Observable@takeWhile(predicate:T=>Boolean):rx.lang.scala.Observable[T]
+
+![takeWhile](https://raw.githubusercontent.com/wiki/ReactiveX/RxJava/images/rx-operators/takeWhile.png)
