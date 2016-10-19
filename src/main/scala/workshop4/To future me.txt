@@ -23,10 +23,9 @@ v Observable
     v Marble diagram
     v filter
     v map
-    + distinct/distinctUntilChanged
-    + drop (skip in RxJava)
-    + take
-    + takeWhile
+    v distinct/distinctUntilChanged
+    v drop/dropWhile (skip in RxJava)
+    + take/takeWhile
     + side effects with doOnNext/doOnError/doOnCompleted/doOnEach/...
     + buffer/slidingBuffer
     + retry
@@ -60,11 +59,13 @@ Workshop 5 - Rx continued
 - Subject
     + both Observer and Observable
     + PublishSubject/BehaviorSubject/...
-- Clocks and Schedulers
+- Schedulers
+    + computation/newThread/IO/...
+    + JavaFxScheduler
+- Clocks and time-based operators
     + Observable.interval
     + Observable.timer
-    + Scheduler
-    + computation/newThread/IO/...
+    + drop with duration
 - ...
 - use cases
 

@@ -48,7 +48,7 @@ Observable.just(0, 1, 2, 3, 4, 5, 6, 7, 8, 9)
 Observable.just(0, 1, 2, 3, 4, 5, 6, 7, 8, 9)
   .filter(i => i % 2 == 0)
   .subscribe(i => println(i))
-// prints 0, 2, 4, 6, 8
+// prints: 0, 2, 4, 6, 8
 ```
 
 
@@ -65,14 +65,14 @@ The code below shows two simple use case for `map`. In the first example we tran
 
 ```scala
 Observable.just(0, 1, 2, 3, 4, 5, 6, 7, 8, 9)
-  .map(i => s"'$i'")
+  .map(i => i.toString)
   .subscribe(s => println(s))
-// prints '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'
+// prints: "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"
 
 Observable.just(0, 1, 2, 3, 4, 5, 6, 7, 8, 9)
   .map(i => i + 1)
   .subscribe(i => println(i))
-// prints 1, 2, 3, 4, 5, 6, 7, 8, 9, 10
+// prints: 1, 2, 3, 4, 5, 6, 7, 8, 9, 10
 ```
 
 
@@ -88,5 +88,89 @@ Observable.just("81", "42", "twee", "150", "15een")
   .filter(s => s.forall(c => c.isDigit))
   .map(s => s.toInt)
   .subscribe(i => println(i))
-// prints 81, 42, 150
+// prints: 81, 42, 150
 ```
+
+
+`distinct` and `distinctUntilChanged`
+-------------------------------------
+
+In some cases you only want to have a stream with unique elements. The first time an event occurs, you want to handle it, but after that you are not interested in the same kind of event anymore. In other cases you might not be interested in the same event occuring multiple times in a row but are interested in them if they occur after other events have occured.
+
+For these cases you can use the `distinct` and `distinctUntilChanged` operators. These operators come in a couple of flavours, which are depicted in the marble diagrams below.
+
+Regarding `distinct`, we can [match on the elements in the `Observable` themselves] or on some [property of the elements]. For example:
+ 
+```scala
+Observable.just(1, 2, 3, 2, 4, 1, 5)
+  .distinct
+  .subscribe(i => println(i))
+// prints: 1, 2, 3, 4, 5
+
+Observable.just("a", "abc", "ab", "aaa", "b")
+  .distinct(s => s.length)
+  .subscribe(s => println(s))
+// prints: "a", "abc", "ab"
+```
+
+[match on the elements in the `Observable` themselves]: http://reactivex.io/rxscala/scaladoc/index.html#rx.lang.scala.Observable@distinct:rx.lang.scala.Observable[T]
+[property of the elements]: http://reactivex.io/rxscala/scaladoc/index.html#rx.lang.scala.Observable@distinct[U](keySelector:T=>U):rx.lang.scala.Observable[T]
+
+![distinct](https://raw.githubusercontent.com/wiki/ReactiveX/RxJava/images/rx-operators/distinct.png)
+
+![distinct-with-selector](https://raw.githubusercontent.com/wiki/ReactiveX/RxJava/images/rx-operators/distinct.key.png)
+
+Regarding `distinctUntilChanged` we have the same kinds of operators, [with] and [without] a selector:
+
+```scala
+Observable.just(1, 2, 2, 3, 2, 2, 2)
+  .distinctUntilChanged
+  .subscribe(i => println(i))
+
+Observable.just("a", "b", "ab", "abc", "bc")
+  .distinctUntilChanged(s => s.length)
+  .subscribe(s => println(s))
+```
+
+[with]: http://reactivex.io/rxscala/scaladoc/index.html#rx.lang.scala.Observable@distinctUntilChanged[U](keySelector:T=>U):rx.lang.scala.Observable[T]
+[without]: http://reactivex.io/rxscala/scaladoc/index.html#rx.lang.scala.Observable@distinctUntilChanged:rx.lang.scala.Observable[T]
+
+![distinctUntilChanged](https://raw.githubusercontent.com/wiki/ReactiveX/RxJava/images/rx-operators/distinctUntilChanged.png)
+![distinctUntilChanged-with-selector](https://raw.githubusercontent.com/wiki/ReactiveX/RxJava/images/rx-operators/distinctUntilChanged.key.png)
+
+As a final example, `distinct` is used in the [`jobMonitor`] in [`easy-ingest-dispatcher`]. Here every couple of seconds a list of all files and folders in the `depositsDirectory` is asked from the filesystem. However, we are only interested in the ones that were just added. Given the `Observable[File]` we gained before, we can then do a `distinct(_.getName)` where we check the distinctness of the `File`'s name.
+
+[`jobMonitor`]: https://github.com/rvanheest-DANS-KNAW/easy-ingest-dispatcher/blob/7f802ad62fa78a74b628a43f58f050599c2ce59d/src/main/scala/nl/knaw/dans/easy/ingest_dispatcher/EasyIngestDispatcher.scala#L80
+[`easy-ingest-dispatcher`]: https://github.com/DANS-KNAW/easy-ingest-dispatcher
+
+
+`drop`/`skip`
+-------------
+
+Another way get rid of certain elements is to `drop` a certain number of elements, in this case the first elements of a stream. You can specify [a certain number of elements] to be dropped or specify [a timeframe] in which all elements are dropped.
+
+**Note 1:** `drop` always acts on the first elements of a stream!
+**Note 2:** In RxJava this operator is called [`skip`]. RxScala choose to use `drop` instead because of naming conventions in the Scala Collections API.
+**Note 3:** Because the latter of the two flavours of `drop` works on the notion of time, we will ignore this specific operator for now and come back to it in the next workshop.
+
+[a certain number of elements]: http://reactivex.io/rxscala/scaladoc/index.html#rx.lang.scala.Observable@drop(n:Int):rx.lang.scala.Observable[T]
+[a timeframe]: http://reactivex.io/rxscala/scaladoc/index.html#rx.lang.scala.Observable@drop(time:scala.concurrent.duration.Duration):rx.lang.scala.Observable[T]
+[`skip`]: http://reactivex.io/RxJava/javadoc/rx/Observable.html#skip(int)
+
+![drop-number](https://raw.githubusercontent.com/wiki/ReactiveX/RxJava/images/rx-operators/skip.png)
+
+```scala
+Observable.just(1, 2, 3, 4, 5)
+  .drop(3)
+  .subscribe(i => println(i))
+// prints: 4, 5
+```
+
+An alternative to `drop(n)` is [`dropWhile`], which discards all the elements of the `Observable` as long as its predicate remains `true`.
+
+**Note:** just as with `drop`, this is called [`skipWhile`] in RxJava.
+
+[`dropWhile`]: http://reactivex.io/rxscala/scaladoc/index.html#rx.lang.scala.Observable@dropWhile(predicate:T=>Boolean):rx.lang.scala.Observable[T]
+[`skipWhile`]: http://reactivex.io/RxJava/javadoc/rx/Observable.html#skipWhile(rx.functions.Func1)
+
+![dropWhile](https://raw.githubusercontent.com/wiki/ReactiveX/RxJava/images/rx-operators/skipWhile.png)
