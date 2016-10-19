@@ -44,3 +44,23 @@ Observable.just(1, 2, 3, 4, 5)
 Observable.just(0, 1, 2, 3, 4)
   .take(3)
   .subscribe(i => println(i))
+
+Observable.just(1, 2, 3, 4)
+  .doOnNext(i => println(s"onNext: $i"))
+  .doOnError(e => println(s"onError: ${e.getMessage}"))
+  .doOnCompleted { println("completed") }
+  .doOnSubscribe { println("subscribed") }
+  .doOnUnsubscribe { println("unsubscribed") }
+  .doOnTerminate { println("on terminate") }
+  .doAfterTerminate { println("after terminate") }
+  .subscribe
+
+Observable.error(new Exception("ERROR!!!"))
+  .doOnNext(i => println(s"onNext: $i"))
+  .doOnError(e => println(s"onError: ${e.getMessage}"))
+  .doOnCompleted { println("completed") }
+  .doOnSubscribe { println("subscribed") }
+  .doOnUnsubscribe { println("unsubscribed") }
+  .doOnTerminate { println("on terminate") }
+  .doAfterTerminate { println("after terminate") }
+  .subscribe(_ => {}, e => println(s"the error was $e"))

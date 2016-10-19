@@ -26,8 +26,9 @@ v Observable
     v distinct/distinctUntilChanged
     v drop/dropWhile (skip in RxJava)
     v take/takeWhile
-    + side effects with doOnNext/doOnError/doOnCompleted/doOnEach/...
-    + buffer/slidingBuffer
+    v side effects with doOnNext/doOnError/doOnCompleted/doOnEach/...
+    + buffer/slidingBuffer/tumblingBuffer
+    + window/sliding/tumbling
     + retry
     + other basic operators
 - Combining streams
@@ -37,7 +38,6 @@ v Observable
     + combineLatest
     + withLatestFrom
     + zipWith
-    + window
 v assignments:
     v skip every third element in an Observable
     v Pi approximation

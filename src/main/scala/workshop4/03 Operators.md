@@ -209,3 +209,73 @@ Similar to a `dropWhile` there is a [`takeWhile`] that takes a predicate and ret
 [`takeWhile`]: http://reactivex.io/rxscala/scaladoc/index.html#rx.lang.scala.Observable@takeWhile(predicate:T=>Boolean):rx.lang.scala.Observable[T]
 
 ![takeWhile](https://raw.githubusercontent.com/wiki/ReactiveX/RxJava/images/rx-operators/takeWhile.png)
+
+
+Side effects
+------------
+
+So far we have seen a couple of operators that transform, filter or limit a stream of events/data. These operators are supposed to run in a *pure* context, meaning that they are not allowed to do side effects such as writing to standard output, a file or a database, mutating state, or putting a thread to sleep. This is all part of the functional style that is incorporated in the Rx libraries.
+
+To perform side effects, we have special methods to our disposal to do so. These are usually identified by the name of the event on which's occurence the side effect needs to take place, prefixed with `do`:
+
+* [doOnNext](http://reactivex.io/rxscala/scaladoc/index.html#rx.lang.scala.Observable@doOnNext(onNext:T=>Unit):rx.lang.scala.Observable[T]) - takes a function of type `T => Unit` that is applied with every element of the stream, after which the original element is passed on downstream.
+* [doOnError](http://reactivex.io/rxscala/scaladoc/index.html#rx.lang.scala.Observable@doOnError(onError:Throwable=>Unit):rx.lang.scala.Observable[T]) - takes a function of type `Throwable => Unit` and applies it to the `onError` event that might terminate the stream. Note that it does not consume the error, but only applies it to the given function and propagate it to downstream when its finished.
+* [doOnCompleted](http://reactivex.io/rxscala/scaladoc/index.html#rx.lang.scala.Observable@doOnCompleted(onCompleted:=>Unit):rx.lang.scala.Observable[T]) - executes the code block given as argument whenever the stream encounters an `onCompleted` event. Note that it does not consume this event!
+* [doOnSubscribe](http://reactivex.io/rxscala/scaladoc/index.html#rx.lang.scala.Observable@doOnSubscribe(onSubscribe:=>Unit):rx.lang.scala.Observable[T]) - executes the code block given as argument whenever the stream is subscribed to by any `Observer`.
+* [doOnUnsubscribe](http://reactivex.io/rxscala/scaladoc/index.html#rx.lang.scala.Observable@doOnUnsubscribe(onUnsubscribe:=>Unit):rx.lang.scala.Observable[T]) - executes the code block given as argument whenever the stream is unsubcribed from.
+* [doOnTerminate]() - executes the code block given as argument whenever the stream encounters either an `onCompleted` or `onError` event.
+* [doAfterTerminate]() - executes the code block given as argument after the stream is unsubscribed from.
+
+In general these operators are fairly useful for debugging an operator sequence, to see what elements are going through it or what is going on inside.
+
+```scala
+Observable.just(1, 2, 3, 4)
+  .doOnNext(i => println(s"onNext: $i"))
+  .doOnError(e => println(s"onError: ${e.getMessage}"))
+  .doOnCompleted { println("completed") }
+  .doOnSubscribe { println("subscribed") }
+  .doOnUnsubscribe { println("unsubscribed") }
+  .doOnTerminate { println("on terminate") }
+  .doAfterTerminate { println("after terminate") }
+  .subscribe
+
+// prints:
+/*
+  subscribed
+  onNext: 1
+  onNext: 2
+  onNext: 3
+  onNext: 4
+  completed
+  on terminate
+  unsubscribed
+  after terminate
+ */
+```
+
+---
+
+```scala
+Observable.error(new Exception("ERROR!!!"))
+  .doOnNext(i => println(s"onNext: $i"))
+  .doOnError(e => println(s"onError: ${e.getMessage}"))
+  .doOnCompleted { println("completed") }
+  .doOnSubscribe { println("subscribed") }
+  .doOnUnsubscribe { println("unsubscribed") }
+  .doOnTerminate { println("on terminate") }
+  .doAfterTerminate { println("after terminate") }
+  .subscribe(_ => {}, e => println(s"the error was $e"))
+
+// prints:
+/*
+  subscribed
+  onError: ERROR!!!
+  on terminate
+  the error was java.lang.Exception: ERROR!!!
+  unsubscribed
+  after terminate
+ */
+```
+
+
+
