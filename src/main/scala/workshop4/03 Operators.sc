@@ -32,3 +32,11 @@ Observable.just(1, 2, 2, 3, 2, 2, 2)
 Observable.just("a", "b", "ab", "abc", "bc")
   .distinctUntilChanged(s => s.length)
   .subscribe(s => println(s))
+
+Observable.just(1, 2, 3, 4, 5)
+  .drop(3)
+  .subscribe(i => println(i))
+
+Observable.just(1, 2, 3, 4, 5)
+  .dropWhile(i => i < 3)
+  .subscribe(i => println(i))

@@ -174,3 +174,10 @@ An alternative to `drop(n)` is [`dropWhile`], which discards all the elements of
 [`skipWhile`]: http://reactivex.io/RxJava/javadoc/rx/Observable.html#skipWhile(rx.functions.Func1)
 
 ![dropWhile](https://raw.githubusercontent.com/wiki/ReactiveX/RxJava/images/rx-operators/skipWhile.png)
+
+```scala
+Observable.just(1, 2, 3, 4, 5)
+  .dropWhile(i => i < 3)
+  .subscribe(i => println(i))
+// prints: 3, 4, 5
+```
