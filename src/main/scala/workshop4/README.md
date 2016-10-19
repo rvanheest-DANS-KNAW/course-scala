@@ -9,3 +9,19 @@ Please, read through the material in the following order, before proceeding to t
 1. [Interactive collections](01%20Iterable.md) - *A brief looking back on the previous workshop and interactive collections*
 2. [Reactive collections](02%20Observable.md) - *Introducing reactive programming, reactive collections and the basics of Rx*
 3. [Operators](03%20Operators.md) - *An overview of some basic operators on `Observable`s*
+
+
+Further reading
+---------------
+
+When working with Rx, it is always useful to have the following pages opened:
+
+* [Rx javadoc](http://reactivex.io/RxJava/javadoc/rx/Observable.html)
+* [Rx scaladoc](http://reactivex.io/rxscala/scaladoc/index.html#rx.lang.scala.Observable)
+* [RxScala comparison table](http://reactivex.io/rxscala/comparison.html)
+
+Further useful webpages to read or to have as reference material:
+
+* [Intro to RxJava by Chris Froussios](https://github.com/Froussios/Intro-To-RxJava)
+* Grokking RxJava by Dan Lew: [part 1](http://blog.danlew.net/2014/09/15/grokking-rxjava-part-1/), [part 2](http://blog.danlew.net/2014/09/22/grokking-rxjava-part-2/), [part 3](http://blog.danlew.net/2014/09/30/grokking-rxjava-part-3/) and [part 4](http://blog.danlew.net/2014/10/08/grokking-rxjava-part-4/)
+
