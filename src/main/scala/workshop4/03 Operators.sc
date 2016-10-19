@@ -64,3 +64,8 @@ Observable.error(new Exception("ERROR!!!"))
   .doOnTerminate { println("on terminate") }
   .doAfterTerminate { println("after terminate") }
   .subscribe(_ => {}, e => println(s"the error was $e"))
+
+Observable.error(new Exception("useful error message"))
+  .doOnError(e => println(s"onError: ${e.getMessage}"))
+  .onErrorResumeNext(e => Observable.just(-1))
+  .subscribe(i => println(i))

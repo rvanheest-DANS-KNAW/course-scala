@@ -27,10 +27,8 @@ v Observable
     v drop/dropWhile (skip in RxJava)
     v take/takeWhile
     v side effects with doOnNext/doOnError/doOnCompleted/doOnEach/...
-    + buffer/slidingBuffer/tumblingBuffer
-    + window/sliding/tumbling
-    + retry
-    + other basic operators
+    v retry
+    v onErrorResumeNext
 - Combining streams
     + concat
     + merge

@@ -278,4 +278,33 @@ Observable.error(new Exception("ERROR!!!"))
 ```
 
 
+Error handling
+--------------
 
+As mentioned before, `onError` is a terminal event, meaning that once this event happens, no other events like `onNext`, `onError` or `onCompleted` can ever occur in this stream. However, in production level systems it is not expected that a service terminates itself whenever an error occurs; especially when it is not a fatal error. Preferably the error is logged, after which the stream recovers itself and carries on.
+
+This is exactly what the [`retry`] operators can do. When included in the operator sequence, they consume the error, do not propagate it and resubscribe to the upstream `Observable`. If no parameter is given to `retry`, it will retry forever, without ever propagating an error. When [specified as an argument], the `retry` will only happen a finite amount of times, after which the latest error is still propagated.
+
+[`retry`]: http://reactivex.io/rxscala/scaladoc/index.html#rx.lang.scala.Observable@retry:rx.lang.scala.Observable[T]
+[specified as an argument]: http://reactivex.io/rxscala/scaladoc/index.html#rx.lang.scala.Observable@retry(retryCount:Long):rx.lang.scala.Observable[T]
+
+![retry](https://raw.githubusercontent.com/wiki/ReactiveX/RxJava/images/rx-operators/retry.png)
+
+In [`easy-ingest-dispatcher`] the `retry` is included in the [`run` method] to ensure that the `jobMonitor` always keeps running, even if an error occurs. Since `retry` consumes the exception, it is a good practice to have a `doOnError` right before it that logs the exception.
+
+[`run` method]: https://github.com/rvanheest-DANS-KNAW/easy-ingest-dispatcher/blob/7f802ad62fa78a74b628a43f58f050599c2ce59d/src/main/scala/nl/knaw/dans/easy/ingest_dispatcher/EasyIngestDispatcher.scala#L63
+
+Another way of dealing with an `onError` event is by using [`onErrorResumeNext`]. This operator takes a function of type `Throwable => Observable[T]`, where the `Throwable` is the exception encountered in the `onError` event and `Observable[T]` is the stream with which to continue the operator sequence.
+
+[`onErrorResumeNext`]: http://reactivex.io/rxscala/scaladoc/index.html#rx.lang.scala.Observable@onErrorResumeNext[U>:T](resumeFunction:Throwable=>rx.lang.scala.Observable[U]):rx.lang.scala.Observable[U]
+
+![onErrorResumeNext](https://raw.githubusercontent.com/wiki/ReactiveX/RxJava/images/rx-operators/onErrorResumeNext.png)
+
+Again it is often useful to first log the error using `doOnError` before consuming it in `doOnErrorResumeNext`.
+
+```scala
+Observable.error(new Exception("useful error message"))
+  .doOnError(e => println(s"onError: ${e.getMessage}"))
+  .onErrorResumeNext(e => Observable.just(-1))
+  .subscribe(i => println(i))
+```
