@@ -159,6 +159,7 @@ Similarly we do not always need the implementation for all three event handlers.
 Observable.just(1, 2, 3).subscribe(value => println(s"received onNext event with value: $value"))
 ```
 
+
 Creating a custom `Observable`
 ------------------------------
 So far we have used predefined functions to create `Observable`s. Soon you will however discover that in certain cases these factory methods do not suffice. For example, if you want to create an infinite stream of elements (equivalent to the one in [the previous section](01%20Iterable.md)), you cannot use `just`, `empty` or `error`. Surely you can use `from` with the `Iterable` from the previous section, but that's not fun enough!
@@ -202,7 +203,8 @@ def getEvent[T <: InputEvent](node: Node, event: EventType[T]): Observable[T] = 
 **Warning:** as many things can go wrong in creating your own `Observable`, it is [generally advised] to stay away from `Observable.apply` as much as possible! It is the source of many bugs and lots of head scratching. Instead use existing factory methods from the API under all possible circumstances. Only use it when you can't solve your problem in another way, such as `getEvent` (although even this is already wrapped in the [RxJavaFx library]!). Spoiler alert: `randomNumbers` can also be created without `Observable.apply`, but we will get to that when we touch `Scheduler`s.
 
 [generally advised]: http://stackoverflow.com/a/36173021/2389405
-[RxJavaFx]: https://github.com/ReactiveX/RxJavaFX
+[RxJavaFx library]: https://github.com/ReactiveX/RxJavaFX
+
 
 RxJava vs. RxScala
 ------------------

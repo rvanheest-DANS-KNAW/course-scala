@@ -20,12 +20,13 @@ v Observable
     v Infinite-ness
     v RxJava vs RxScala
 - Operators
-    + Marble diagram
-    + map
-    + filter
+    v Marble diagram
+    v filter
+    v map
     + distinct/distinctUntilChanged
-    + drop
+    + drop (skip in RxJava)
     + take
+    + takeWhile
     + side effects with doOnNext/doOnError/doOnCompleted/doOnEach/...
     + buffer/slidingBuffer
     + retry
@@ -37,6 +38,7 @@ v Observable
     + combineLatest
     + withLatestFrom
     + zipWith
+    + window
 v assignments:
     v skip every third element in an Observable
     v Pi approximation
@@ -46,6 +48,7 @@ v assignments:
 
 
 Workshop 5 - Rx continued
+- testing Observable
 - hot vs cold Observable
     + Observable.just etc. are cold
     + Reactive source (mouse moves) is hot
