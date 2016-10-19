@@ -19,7 +19,7 @@ v Observable
         * think about unsubscribes, subscribe, etc.
     v Infinite-ness
     v RxJava vs RxScala
-- Operators
+v Operators
     v Marble diagram
     v filter
     v map
