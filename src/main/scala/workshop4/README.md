@@ -20,7 +20,7 @@ When working with Rx, it is always useful to have the following pages opened:
 * [Rx scaladoc](http://reactivex.io/rxscala/scaladoc/index.html#rx.lang.scala.Observable)
 * [RxScala comparison table](http://reactivex.io/rxscala/comparison.html)
 
-Further useful webpages to read or to have as reference material:
+Further useful web pages to read or to have as reference material:
 
 * [Intro to RxJava by Chris Froussios](https://github.com/Froussios/Intro-To-RxJava)
 * Grokking RxJava by Dan Lew: [part 1](http://blog.danlew.net/2014/09/15/grokking-rxjava-part-1/), [part 2](http://blog.danlew.net/2014/09/22/grokking-rxjava-part-2/), [part 3](http://blog.danlew.net/2014/09/30/grokking-rxjava-part-3/) and [part 4](http://blog.danlew.net/2014/10/08/grokking-rxjava-part-4/)

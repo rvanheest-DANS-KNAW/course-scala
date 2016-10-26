@@ -15,7 +15,7 @@ On the other hand we have the **reactive** collection. Examples of this can be v
 
 Types of events
 ---------------
-The contract of a reactive collection states that three types of events can be pushed from the producer to the comsumer.
+The contract of a reactive collection states that three types of events can be pushed from the producer to the consumer.
 
   * The first type, **OnNext**, is the carrier of every element you receive. You can view it as a box with the element inside it. During the lifetime of a reactive collection, the producer will send 0 or more *OnNext* events to its consumer.
   * The second type of events is the **OnError** event. This event signals that something went wrong in the collection. An *OnError* event signals the sudden, exceptional 'death' of a reactive collection and after it no other event will or can ever occur! The *OnError* event carries the `Throwable` that caused its termination with it, so you can always see what caused this exceptional behavior and act accordingly.
@@ -91,7 +91,7 @@ received onCompleted event
 
 If you're following along by typing code: :bouquet::bouquet::bouquet: **Congratulations, you have made your first subscription!!!** :bouquet::bouquet::bouquet:
 
-### Other primative streams
+### Other primitive streams
 As we just saw, you can create a stream with hardcoded elements using `Observable.just`. However, in some cases you may prefer the source to be any arbitrary interactive collection that can be created or calculated on runtime. For this you use `Observable.from` instead. You can supply any `Iterable` or one of its many subtypes as the argument of this function.
 
 ```scala
@@ -109,7 +109,7 @@ received onNext event with value: 4
 received onCompleted event
 ```
 
-Another primative stream is the `Observable` that only emits an *OnError* event. Use the `Observable.error` for this with an instance of `Throwable` as its argument. This stream does not emit any values but only terminates with an exception.
+Another primitive stream is the `Observable` that only emits an *OnError* event. Use the `Observable.error` for this with an instance of `Throwable` as its argument. This stream does not emit any values but only terminates with an exception.
 
 ```scala
 val emitError: Observable[Int] = Observable.error(new Exception("something went wrong"))

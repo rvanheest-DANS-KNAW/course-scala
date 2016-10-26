@@ -17,7 +17,7 @@ The main source of wisdom on the behavior of each operator comes from the [Obser
 Marble diagrams
 ---------------
 
-The [Observable javadoc] makes use so called marble diagrams. These show the behavior of a certain operator in a fairly simple and understandable way. For example, the diagram below shows an imaginairy operator `flip`, which turns the marbles upside-down as they are emitted by the source `Observable`. It is important to learn how to read these kinds of diagrams, as this forms the best part of the documentation.
+The [Observable javadoc] makes use so called marble diagrams. These show the behavior of a certain operator in a fairly simple and understandable way. For example, the diagram below shows an imaginary operator `flip`, which turns the marbles upside-down as they are emitted by the source `Observable`. It is important to learn how to read these kinds of diagrams, as this forms the best part of the documentation.
 
 ![flip](https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/legend.png)
 
@@ -95,7 +95,7 @@ Observable.just("81", "42", "twee", "150", "15een")
 `foldLeft`
 ----------
 
-A third operator from the previous workshop is [`foldLeft`]. Given a collection of data, it calculated some form of accumulation of the data, such as the sum or product of numbers or the concattenation of `String`s. This is also the case for the `Observable`: all events get accumulated and after the stream is *completed*, the resulting accumulation is emitted downstream.
+A third operator from the previous workshop is [`foldLeft`]. Given a collection of data, it calculated some form of accumulation of the data, such as the sum or product of numbers or the concatenation of `String`s. This is also the case for the `Observable`: all events get accumulated and after the stream is *completed*, the resulting accumulation is emitted downstream.
 
 [`foldLeft`]: http://reactivex.io/rxscala/scaladoc/index.html#rx.lang.scala.Observable@foldLeft[R](initialValue:R)(accumulator:(R,T)=>R):rx.lang.scala.Observable[R]
 
@@ -114,7 +114,7 @@ Observable.just(0, 1, 2, 3, 4)
 `scan`
 ------
 
-Although `foldLeft` might be useful in some cases of streams, it is also quite riskfull to use this operator! If an `Observable` produces infinitly many elements or never completes, the `foldLeft` will not emit any values. An alternative operator that is most often used as an accumulator is [`scan`]. This operator is similar to `foldLeft` in that it accumulates the values of its `Observable`, but different in that it emits all intermediate results as well. In other words, it does not wait for an `onCompleted` event to emit the accumulated value, but rather accumulates the value and emit this value immediately.
+Although `foldLeft` might be useful in some cases of streams, it is also quite risky to use this operator! If an `Observable` produces infinitely many elements or never completes, the `foldLeft` will not emit any values. An alternative operator that is most often used as an accumulator is [`scan`]. This operator is similar to `foldLeft` in that it accumulates the values of its `Observable`, but different in that it emits all intermediate results as well. In other words, it does not wait for an `onCompleted` event to emit the accumulated value, but rather accumulates the value and emit this value immediately.
 
 [`scan`]: http://reactivex.io/rxscala/scaladoc/index.html#rx.lang.scala.Observable@scan[R](initialValue:R)(accumulator:(R,T)=>R):rx.lang.scala.Observable[R])
 
@@ -133,7 +133,7 @@ Observable.just(0, 1, 2, 3, 4)
 `distinct` and `distinctUntilChanged`
 -------------------------------------
 
-In some cases you only want to have a stream with unique elements. The first time an event occurs, you want to handle it, but after that you are not interested in the same kind of event anymore. In other cases you might not be interested in the same event occuring multiple times in a row but are interested in them if they occur after other events have occured.
+In some cases you only want to have a stream with unique elements. The first time an event occurs, you want to handle it, but after that you are not interested in the same kind of event anymore. In other cases you might not be interested in the same event occurring multiple times in a row but are interested in them if they occur after other events have occurred.
 
 For these cases you can use the `distinct` and `distinctUntilChanged` operators. These operators come in a couple of flavours, which are depicted in the marble diagrams below.
 
@@ -357,7 +357,7 @@ To write this in terms of `Observable`, we start with an `Observable.just(0).rep
   
 The accumulation phase is done using a `scan` operation: `.scan((0, 1)) { case ((pp, p), _) => (p, pp + p) }`. Here we use a *tuple* as the seed value: `(0, 1)`. To get the next element of the sequence, we calculate the sum of these values (`pp + p`) and tuple that with the latest value (`p`). Note that we discard the original elements (which were all `0`s) by using an `_`. The resulting tuple will then become the next seed value *and* be emitted downstream for further use.
 
-The resulting stream therefore has type `Observable[(Int, Int)]`, where each tuple contains the *previous* and *current* number in the sequence. Since we're only interested in the *current* value, we have to `map` the stream and get out the righthandside of the tuple: `.map(_._2)`.
+The resulting stream therefore has type `Observable[(Int, Int)]`, where each tuple contains the *previous* and *current* number in the sequence. Since we're only interested in the *current* value, we have to `map` the stream and get out the right-hand side of the tuple: `.map(_._2)`.
 
 In the full code example below we define the function `fibonacci` to be this infinite stream of values. It is good practice to leave out any bounds on the number of elements (a.k.a. how many of the elements in the sequence do you want) in this function and let the user decide how many he wants.
 
