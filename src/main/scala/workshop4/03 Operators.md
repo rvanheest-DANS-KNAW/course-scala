@@ -92,6 +92,44 @@ Observable.just("81", "42", "twee", "150", "15een")
 ```
 
 
+`foldLeft`
+----------
+
+A third operator from the previous workshop is [`foldLeft`]. Given a collection of data, it calculated some form of accumulation of the data, such as the sum or product of numbers or the concattenation of `String`s. This is also the case for the `Observable`: all events get accumulated and after the stream is *completed*, the resulting accumulation is emitted downstream.
+
+[`foldLeft`]: http://reactivex.io/rxscala/scaladoc/index.html#rx.lang.scala.Observable@foldLeft[R](initialValue:R)(accumulator:(R,T)=>R):rx.lang.scala.Observable[R]
+
+![foldLeft](https://raw.githubusercontent.com/wiki/ReactiveX/RxJava/images/rx-operators/reduceSeed.png)
+
+In the example below we accumulate all numbers in the stream. Again, notice that (as shown in the image above) the result is only emitted when the original stream completes!
+
+```scala
+Observable.just(0, 1, 2, 3, 4)
+  .foldLeft(0)((acc, i) => acc + i)
+  .subscribe(i => println(i))
+// prints: 10
+```
+
+
+`scan`
+------
+
+Although `foldLeft` might be useful in some cases of streams, it is also quite riskfull to use this operator! If an `Observable` produces infinitly many elements or never completes, the `foldLeft` will not emit any values. An alternative operator that is most often used as an accumulator is [`scan`]. This operator is similar to `foldLeft` in that it accumulates the values of its `Observable`, but different in that it emits all intermediate results as well. In other words, it does not wait for an `onCompleted` event to emit the accumulated value, but rather accumulates the value and emit this value immediately.
+
+[`scan`]: http://reactivex.io/rxscala/scaladoc/index.html#rx.lang.scala.Observable@scan[R](initialValue:R)(accumulator:(R,T)=>R):rx.lang.scala.Observable[R])
+
+![scan](https://raw.githubusercontent.com/wiki/ReactiveX/RxJava/images/rx-operators/scanSeed.png)
+
+The example below is the same as the one from the `foldLeft` section, but with the `scan` operator. Notice the difference in its results! Also note that the resulting stream **always** starts with the `seed` value (in this case `0`) and only emits the accumulations after that! If you don't want the seed value (which is often the case!), you can use a `drop(1)` operator (which we will discuss below) right after the `scan`.
+
+```scala
+Observable.just(0, 1, 2, 3, 4)
+  .scan(0)((acc, i) => acc + i)
+  .subscribe(i => println(i))
+// prints: 0, 0, 1, 3, 6, 10
+```
+
+
 `distinct` and `distinctUntilChanged`
 -------------------------------------
 
@@ -307,4 +345,47 @@ Observable.error(new Exception("useful error message"))
   .doOnError(e => println(s"onError: ${e.getMessage}"))
   .onErrorResumeNext(e => Observable.just(-1))
   .subscribe(i => println(i))
+```
+
+
+An example
+----------
+
+There are many more operators that could be discussed in this section. The operators listed above are the ones that are most notably used in the current code of [EASY]. In this final section on operators we will look at a real life example of using an `Observable`. We will create a stream of numbers that form the [Fibonacci sequence]. Starting of with the values `{0, 1}`, this sequence accumulates the previous two values as its next value: `fib(n) = fib(n - 1) + fib(n - 2)`. So, this first elements of this (infinite) sequence are: `{1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, ...}`
+
+To write this in terms of `Observable`, we start with an `Observable.just(0).repeat` that will emit an infinite stream of elements (in this case they are all `0`). We will not actually use the value itself, but rather use the fact that an element is emitted (a.k.a. an `onNext` occured). 
+  
+The accumulation phase is done using a `scan` operation: `.scan((0, 1)) { case ((pp, p), _) => (p, pp + p) }`. Here we use a *tuple* as the seed value: `(0, 1)`. To get the next element of the sequence, we calculate the sum of these values (`pp + p`) and tuple that with the latest value (`p`). Note that we discard the original elements (which were all `0`s) by using an `_`. The resulting tuple will then become the next seed value *and* be emitted downstream for further use.
+
+The resulting stream therefore has type `Observable[(Int, Int)]`, where each tuple contains the *previous* and *current* number in the sequence. Since we're only interested in the *current* value, we have to `map` the stream and get out the righthandside of the tuple: `.map(_._2)`.
+
+In the full code example below we define the function `fibonacci` to be this infinite stream of values. It is good practice to leave out any bounds on the number of elements (a.k.a. how many of the elements in the sequence do you want) in this function and let the user decide how many he wants.
+
+Below is a table of the values that are emitted by each of the operators in this function. This makes it especially clear what the `scan` operator is doing.
+
+| `Observable.just(0).repeat` | `scan`   | `map` |
+| --------------------------- | -------- | ----- |
+|                             | (0, 1)   | 1     |
+| 0                           | (1, 1)   | 1     |
+| 0                           | (1, 2)   | 2     |
+| 0                           | (2, 3)   | 3     |
+| 0                           | (3, 5)   | 5     |
+| 0                           | (5, 8)   | 8     |
+| 0                           | (8, 13)  | 13    |
+| 0                           | (13, 21) | 21    |
+| 0                           | (21, 34) | 34    |
+| 0                           | (34, 55) | 55    |
+
+[EASY]: https://easy.dans.knaw.nl/ui/home
+[Fibonacci sequence]: https://en.wikipedia.org/wiki/Fibonacci_number
+
+```scala
+def fibonacci: Observable[Int] = {
+  Observable.just(0)
+    .repeat
+    .scan((0, 1)) { case ((pp, p), _) => (p, pp + p) }
+    .map(_._2)
+}
+
+fibonacci.take(10).subscribe(i => println(i))
 ```

@@ -23,12 +23,14 @@ v Operators
     v Marble diagram
     v filter
     v map
+    v scan
     v distinct/distinctUntilChanged
     v drop/dropWhile (skip in RxJava)
     v take/takeWhile
     v side effects with doOnNext/doOnError/doOnCompleted/doOnEach/...
     v retry
     v onErrorResumeNext
+    + Example
 - Combining streams
     + concat
     + merge

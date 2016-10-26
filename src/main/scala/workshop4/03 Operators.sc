@@ -17,6 +17,14 @@ Observable.just("81", "42", "twee", "150", "15een")
   .map(s => s.toInt)
   .subscribe(i => println(i))
 
+Observable.just(0, 1, 2, 3, 4)
+  .foldLeft(0)((acc, i) => acc + i)
+  .subscribe(i => println(i))
+
+Observable.just(0, 1, 2, 3, 4)
+  .scan(0)((acc, i) => acc + i)
+  .subscribe(i => println(i))
+
 Observable.just(1, 2, 3, 2, 4, 1, 5)
   .distinct
   .subscribe(i => println(i))
