@@ -359,7 +359,7 @@ The accumulation phase is done using a `scan` operation: `.scan((0, 1)) { case (
 
 The resulting stream therefore has type `Observable[(Int, Int)]`, where each tuple contains the *previous* and *current* number in the sequence. Since we're only interested in the *current* value, we have to `map` the stream and get out the right-hand side of the tuple: `.map(_._2)`.
 
-In the full code example below we define the function `fibonacci` to be this infinite stream of values. It is good practice to leave out any bounds on the number of elements (a.k.a. how many of the elements in the sequence do you want) in this function and let the user decide how many he wants.
+In the full code example below we define the function `fibonacci` to be this infinite stream of values. It is good practice to leave out any bounds on the number of elements (a.k.a. how many of the elements in the sequence do you want) in this function and let the user decide how many he wants. Some might be interested in the first `n` elements of the sequence, others might be interested in all elements less then `n` or all *even* elements less than a certain number `n`...
 
 Below is a table of the values that are emitted by each of the operators in this function. This makes it especially clear what the `scan` operator is doing.
 
@@ -388,6 +388,8 @@ def fibonacci: Observable[Int] = {
 }
 
 fibonacci.take(10).subscribe(i => println(i))
+fibonacci.takeWhile(n => n < 100).subscribe(i => println(i))
+fibonacci.filter(n => n % 2 == 0).takeWhile(n => n < 1000).subscribe(i => println(i))
 ```
 
 This code can also be found [here], for you to play with.
