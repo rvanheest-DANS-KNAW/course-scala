@@ -6,6 +6,7 @@ Workshop 5 - Rx continued
     + implications for subscribing
         * no subscriptions
         * multiple subscriptions
+    + multicasting (http://blog.danlew.net/2016/06/13/multicasting-in-rxjava/)
     + publish operator
     + ...
 - Subject
