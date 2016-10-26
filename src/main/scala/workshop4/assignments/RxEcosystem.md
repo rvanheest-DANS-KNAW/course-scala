@@ -1,9 +1,13 @@
 Rx ecosystem
 ============
 
-Besides the language implementations such as RxJava, RxScala, Rx.NET, RxJS, RxGroovy, RxRuby, etc. etc. there are lots of other projects that apply the Rx principles to various other domains, such as Strings, arithmetic, file systems, databases and JavaFx.
+Besides the language implementations such as RxJava, RxScala, Rx.NET, RxJS, RxGroovy, RxRuby, etc. etc. there are lots
+of other projects that apply the Rx principles to various other domains, such as Strings, arithmetic, file systems,
+databases and JavaFx.
 
-Have a look at the repositories in the [ReactiveX] GitHub organisation, as well as by [DavidMoten], and look through some of the projects. Prepare some notes or small demos for some of the projects you like or think can be useful in your projects and let's discuss them during the workshop. Also feel free to do a pull request with your code examples.
+Have a look at the repositories in the [ReactiveX] GitHub organisation, as well as by [DavidMoten], and look through some
+of the projects. Prepare some notes or small demos for some of the projects you like or think can be useful in your
+projects and let's discuss them during the workshop. Also feel free to do a pull request with your code examples.
 
 Here is a list of some of the projects you may want to take a look at (in no particular order):
 

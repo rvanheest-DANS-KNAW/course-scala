@@ -1,21 +1,42 @@
 Approximating pi
 ================
 
-There are many ways to [approximate pi]. In this assignment we will do so using a variant of *[summing a circle's area]*. You can view this as randomly throwing a large number of darts on a `r x r` board with origin `(0, 0)` and measuring how many of them have a distance smaller than or equal to `r`. The ratio between these and the total number of darts thrown should give an approximation of pi. In our case we use a `1 x 1` board and our darts are groups of two random numbers between 0.0 and 1.0, representing the x- and y-coordinate respectively.
+There are many ways to [approximate pi]. In this assignment we will do so using a variant of *[summing a circle's area]*.
+You can view this as randomly throwing a large number of darts on a `r x r` board with origin `(0, 0)` and measuring how
+many of them have a distance smaller than or equal to `r`. The ratio between these and the total number of darts thrown
+should give an approximation of pi. In our case we use a `1 x 1` board and our darts are groups of two random numbers
+between 0.0 and 1.0, representing the x- and y-coordinate respectively.
 
 [approximate pi]: https://en.wikipedia.org/wiki/Approximations_of_%CF%80
 [summing a circle's area]: https://en.wikipedia.org/wiki/Approximations_of_%CF%80#Summing_a_circle.27s_area
  
-It is **not** the goal of this exercise to understand the algorithm or to have fun with math, but to practice with a number of operators in Rx. Each of the steps below represents *a single operator* to be added to a chain of subsequent operators.
+It is **not** the goal of this exercise to understand the algorithm or to have fun with math, but to practice with a
+number of operators in Rx. Each of the steps below represents *a single operator* to be added to a chain of subsequent
+operators.
 
-1. Implement the function `random` that generates an infinite stream of random numbers between 0.0 and 1.0. **Hint:** we already made an implementation in [02 Observable.md], so you can just use that. However, you can also try to come up with an implementation that does not use `Observable.apply` directly. Use the [RxScala variant] of [`Observable.fromCallable`] and [`repeat`].
-2. In the `main` method, call `random` and make groups of 2 random numbers; this should yield an `Observable[Seq[Int]]`; allocate this to `groupsOfTwo`.
-3. Each group of 2 numbers (type `Seq[Int]`) represents the `x`- and `y`-coordinate of a single point respectively. Using the value `groupsofTwo`, transform each coordinate into a `Boolean` such that it indicates whether the distance to the origin is smaller than or equal to `1.0`. Allocate this result to `insideCircle: Observable[Int]`. **Hint:** use the Pythagorean Theorem to calculate the distance.
-4. Given `insideCircle`, transform each `Boolean` into an accumulated `Hits` object. If `true`, 1 is added to `successes`, else `successes` stays the same. `total` is incremented every time, regardless of the `Boolean`. The result should be an accumulated stream of `Hits` instances (so, including all intermediate results!). Allocate this to `hits: Observable[Hits]`. **Hint:** use `Hits.empty` as the seed of this operator.
-5. What should happen to the seed value? Is this part of the actual result or should this be discarded? Just append the action to be taken (if any) to `hits`, as this is actually still part of step 4.
-6. Transform each `Hits` instance in the stream `hits` to a `Double` using the formula `hit => hit.successes * 4.0 / hit.total`. This calculates an intermediate approximation of pi. Allocate the result to `piApprox: Observable[Double]`.
-7. Until now the stream is not bounded in size and produces an infinite number of approximations. In this step, make sure that the stream terminates with an `onCompleted` after 1.000.000 approximations. Allocate the result to `oneMillionApproximations: Observable[Double]`.
-8. `oneMillionApproximations` is subscribed to by printing every approximation to the console, printing the stacktrace of any error and printing `done` once the stream completes (as specified in the previous step).
+1. Implement the function `random` that generates an infinite stream of random numbers between 0.0 and 1.0. **Hint:** we
+   already made an implementation in [02 Observable.md], so you can just use that. However, you can also try to come up with
+   an implementation that does not use `Observable.apply` directly. Use the [RxScala variant] of [`Observable.fromCallable`]
+   and [`repeat`].
+2. In the `main` method, call `random` and make groups of 2 random numbers; this should yield an `Observable[Seq[Int]]`;
+   allocate this to `groupsOfTwo`.
+3. Each group of 2 numbers (type `Seq[Int]`) represents the `x`- and `y`-coordinate of a single point respectively. Using
+   the value `groupsofTwo`, transform each coordinate into a `Boolean` such that it indicates whether the distance to the
+   origin is smaller than or equal to `1.0`. Allocate this result to `insideCircle: Observable[Int]`.
+   **Hint:** use the Pythagorean Theorem to calculate the distance.
+4. Given `insideCircle`, transform each `Boolean` into an accumulated `Hits` object. If `true`, 1 is added to `successes`,
+   else `successes` stays the same. `total` is incremented every time, regardless of the `Boolean`. The result should be an
+   accumulated stream of `Hits` instances (so, including all intermediate results!). Allocate this to `hits: Observable[Hits]`.
+   **Hint:** use `Hits.empty` as the seed of this operator.
+5. What should happen to the seed value? Is this part of the actual result or should this be discarded? Just append the
+   action to be taken (if any) to `hits`, as this is actually still part of step 4.
+6. Transform each `Hits` instance in the stream `hits` to a `Double` using the formula `hit => hit.successes * 4.0 / hit.total`.
+   This calculates an intermediate approximation of pi. Allocate the result to `piApprox: Observable[Double]`.
+7. Until now the stream is not bounded in size and produces an infinite number of approximations. In this step, make sure
+   that the stream terminates with an `onCompleted` after 1.000.000 approximations. Allocate the result to
+   `oneMillionApproximations: Observable[Double]`.
+8. `oneMillionApproximations` is subscribed to by printing every approximation to the console, printing the stacktrace of
+   any error and printing `done` once the stream completes (as specified in the previous step).
 
 Make sure that by running this stream, you get an output of each intermediate approximation of pi.
 
