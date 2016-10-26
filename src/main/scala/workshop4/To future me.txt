@@ -32,43 +32,16 @@ v Operators
     v retry
     v onErrorResumeNext
     v Example (fibonacci)
-- Combining streams
+v Combining streams
     v concat
     v merge
     v flatMap
     v combineLatest
     v withLatestFrom
     v Example (login)
-    + zipWith
+    x zipWith
 v assignments:
     v skip every third element in an Observable
     v Pi approximation
     v DictionarySuggestion (combining streams, doing REST call, NO schedulers)
     v Rx ecosystem (discuss some related projects that add extra functionality)
-
-
-
-Workshop 5 - Rx continued
-- testing Observable
-- hot vs cold Observable
-    + Observable.just etc. are cold
-    + Reactive source (mouse moves) is hot
-    + implications for subscribing
-        * no subscriptions
-        * multiple subscriptions
-    + publish operator
-    + ...
-- Subject
-    + both Observer and Observable
-    + PublishSubject/BehaviorSubject/...
-- Schedulers
-    + computation/newThread/IO/...
-    + JavaFxScheduler
-- Clocks and time-based operators
-    + Observable.interval
-    + Observable.timer
-    + drop with duration
-- ...
-- use cases
-- sorting with time?
-
