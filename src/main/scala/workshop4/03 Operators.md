@@ -389,3 +389,7 @@ def fibonacci: Observable[Int] = {
 
 fibonacci.take(10).subscribe(i => println(i))
 ```
+
+This code can also be found [here], for you to play with.
+
+[here]: assignments/Fibonacci.scala
