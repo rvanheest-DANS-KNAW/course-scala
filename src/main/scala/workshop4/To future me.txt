@@ -35,7 +35,7 @@ v Operators
 - Combining streams
     v concat
     v merge
-    + flatMap
+    v flatMap
     + combineLatest
     + withLatestFrom
     + zipWith
