@@ -70,3 +70,85 @@ val forCompr = for {
 forCompr.subscribe(i => println(i))
 // prints: 1, 1, 2, 2, 3, 3
 ```
+
+
+---
+So far we have discussed a number of ways in which `Observable`s were concatenated or merged. The elements in the `onNext`s were however always propagated 'as is', without modifying them. In some cases, however, you want to combine two streams in such a way that their elements are grouped together. The following three sections will discuss different ways in which you can combine streams in this way.
+
+
+`combineLatestWith`
+-------------------
+
+One way to combine elements in a stream is by combining the latest element from `obs1` with the latest element from `obs2`, called [`combineLatestWith`]. Whenever `obs1` or `obs2` emits a new value, a new 'combined' element is emitted in the resulting stream with this newest value from that `Observable` and the latest value from the other `Observable`. Combining these element is done using a function that you provide as an argument of the operator.
+
+```scala
+// for any arbitrary obs1 and obs2
+obs1.combineLatestWith(obs2)((i1, i2) => s"i1 = $i1, i2 = $i2")
+```
+
+Although it is seen as an operator in RxScala, RxJava provides this operator as a static method on `Observable` and calls it `combineLatest` instead. There you write:
+
+```java
+// for any arbitrary obs1 and obs2
+Observable.combineLatest(obs1, obs2, (i1, i2) -> "i1 = " + i1 + ", i2 = " + i2)
+```
+
+See also [RxMarbles' `combineLatest` example] for a more interactive experience of this operator.
+
+[`combineLatestWith`]: http://reactivex.io/rxscala/scaladoc/index.html#rx.lang.scala.Observable@combineLatestWith[U,R](that:rx.lang.scala.Observable[U])(selector:(T,U)=>R):rx.lang.scala.Observable[R]
+[RxMarbles' `combineLatest` example]: http://rxmarbles.com/#combineLatest
+
+![combineLatestWith](https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/combineLatest.png)
+
+
+`withLatestFrom`
+----------------
+
+While `combineLatestWith` calculates a new combination whenever `obs1` or `obs2` emits a new element, there is another operator that does a variation on this. `withLatestFrom` only calculates a new combination whenever `obs1` emits a new element and combines this with the latest element from `obs2`. However, when `obs2` emits a new element **no new combination is emitted**!
+
+In contrast to `combineLatestWith` there is no difference here between RxScala and RxJava. Both use `withLatestFrom` as follows:
+
+```scala
+// for any arbitrary obs1 and obs2
+obs1.withLatestFrom(obs2)((i1, i2) => s"i1 = $i1, i2 = $i2")
+```
+
+See also [RxMarbles' `withLatestFrom` example] for a more interactive experience of this operator.
+
+[`withLatestFrom`]: http://reactivex.io/rxscala/scaladoc/index.html#rx.lang.scala.Observable@withLatestFrom[U,R](other:rx.lang.scala.Observable[U])(resultSelector:(T,U)=>R):rx.lang.scala.Observable[R]
+[RxMarbles' `withLatestFrom` example]: http://rxmarbles.com/#withLatestFrom
+
+![withLatestFrom](https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/withLatestFrom.png)
+
+
+An example
+----------
+
+To demonstrate the use of `combineLatestWith` and `withLatestFrom`, have a look at the [`Login`] demo application. This is a JavaFx application that contains two textfields for *username* and *password* respectively (for this demo application we don't bother with obfuscating the *password* field), a button that logs in to an arbitrary thing and a label in which the result of the login is shown. For the login procedure we have a simple case class `Credentials` that holds a *username* and *password* combination. The idea is to combine the events from the textfields into a `Credentials` object and combine this with the button clicks to do a login. For demo sake we will print the `Credentials` object on the screen whenever a login happens.
+
+First of all we require the event streams (`Observable`s) from the various UI components. For this we use the [RxJavaFx] library that provides the necessary wrappers. Since these return RxJava `Observable`s, we have to convert them to RxScala using the `asScala` operator. For the `Observable`s below, `usernameObs` and `passwordObs` contain the streams of text events such that for every character changed in the textfield, the new `String` is emitted. `buttonObs` contains a stream of button click events.
+
+[`Login`]: assignments/Login.scala
+[RxJavaFx]: https://github.com/ReactiveX/RxJavaFX
+
+```scala
+val usernameObs: Observable[String] = JavaFxObservable.fromObservableValue(usernameTF.textProperty()).asScala
+val passwordObs: Observable[String] = JavaFxObservable.fromObservableValue(passwordTF.textProperty()).asScala
+val buttonObs: Observable[ActionEvent] = JavaFxObservable.fromNodeEvents(button, ActionEvent.ACTION).asScala
+```
+
+To combine *username* and *password* into a `Credentials` object, the `usernameObs` and `passwordObs` streams need to be combined using a `combineLatestWith`. The function provided takes the latest `username` and the latest `password` and combines them into a `Credentials` object.
+Then, to only get the latest `Credentials` objects before a button click, the `buttonObs` and `credentialsObs` are combined using a `withLatestFrom`. Note that the function that combines these two events discards the event and only uses the `creds`.
+
+```scala
+val credentialsObs = usernameObs.combineLatestWith(passwordObs)((username, password) => Credentials(username, password))
+val logins = buttonObs.withLatestFrom(credentialsObs)((_, creds) => creds)
+```
+
+Finally, to get this all working, we need to subscribe to this stream of credentials, called `logins`. For this demo application we choose to print the `creds` object on screen in a label below the button. 
+
+```scala
+logins.subscribe(creds => label.setText(s"latest login: $creds"))
+```
+
+Play around a bit with the application and maybe add a couple of `doOnNext(x => println(x))` lines to see what is going on at each moment in time.  

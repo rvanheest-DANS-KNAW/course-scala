@@ -31,13 +31,14 @@ v Operators
     v side effects with doOnNext/doOnError/doOnCompleted/doOnEach/...
     v retry
     v onErrorResumeNext
-    v Example
+    v Example (fibonacci)
 - Combining streams
     v concat
     v merge
     v flatMap
-    + combineLatest
-    + withLatestFrom
+    v combineLatest
+    v withLatestFrom
+    v Example (login)
     + zipWith
 v assignments:
     v skip every third element in an Observable
@@ -69,4 +70,5 @@ Workshop 5 - Rx continued
     + drop with duration
 - ...
 - use cases
+- sorting with time?
 
