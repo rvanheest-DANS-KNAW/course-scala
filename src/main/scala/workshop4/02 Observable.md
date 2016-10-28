@@ -1,12 +1,12 @@
 Observable
 ==========
 
-Although we can model a lot collections by using an `Iterable`, it does not suffice all cases. For example, we are not
+Although we can model a lot collections by using an `Iterable`, it is not suitable for all cases. For example, we are not
 able to model a collection of real-time mouse moves, key presses or button clicks like an `Iterable`. These collections
-do not have something like a `hasNext` and `next`. Instead, **events** come whenever they want to or when they environment
-generates them. Their source is something that you cannot influence, slow down, speed up or interact with in any other way.
+do not have something like a `hasNext` and `next`. Instead, **events** come whenever they want to or when the environment
+generates them. Their source is something that you cannot control, i.e. slow down, speed up or influence with in any other way.
 In other words, you cannot *pull* events from their source, but instead they are **pushed** to you. All you have to do is
-listen to the collection (often called stream) and **react** to the events that you receive.
+listen to the collection (often called a *stream*) and **react** to the events that you receive.
 
 It should be clear that there is an important distinction between these two types of collections. On the one hand we have
 **interactive** collections (a subtype of `Iterable`) with which you interact by **pulling** the data from the collection.
@@ -14,12 +14,15 @@ You as a *consumer* are in charge of the rate at which the elements in the colle
 of the data (the `Iterable`/`Iterator` combination) has to obey your commands and return a new element only when you want to.
 
 On the other hand we have the **reactive** collection. Examples of this can be various kinds of real time data (mouse moves,
-key presses, stock price, sensor data), data that takes a long time to be computed for which you don't want to block your
-program flow or data that has to come from an external source (network call, file IO) for which you would normally have to
+key presses, stock prices, sensor data), data that takes a long time to be computed for which you don't want to block your
+program flow or data that has to come from an external source (network call, file I/O), for which you would normally have to
 block your program flow as well. These kinds of collections do not have an interactive interface and you therefore cannot
 pull the next element. Instead the data is **pushed** to you and you have to **react** to what you receive by processing
 it in some way. Therefore the *producer* is fully in charge of how fast or how slow the data is streaming towards you,
 while you as a *consumer* can only wait and react to what data comes in.
+
+We call these reactive collections *Observable*s. The next sections will make clear why this name was chosen. For now,
+let's first juxtapose the two kinds of collections.
 
 | Collection  | Java/Scala type | Interaction | In charge |
 |-------------|-----------------|-------------|-----------|
@@ -98,8 +101,8 @@ The most simple `Observable` is the one that emits a number of values as *OnNext
 val emit123: Observable[Int] = Observable.just(1, 2, 3)
 ```
 
-However, when you compile and run this code... nothing happens. That is because nobody is listening. These values in
-`just(1, 2, 3)` will only be emitted if someone (a.k.a. at least one `Observer`) is actually listening to the stream.
+However, when you compile and run this code... nothing happens. That is because nobody is listening! These values in
+`just(1, 2, 3)` will only be emitted if someone (i.e. at least one `Observer`) is actually listening to the stream.
 If nobody listens, nothing happens!
 
 > side note: there is a distinction between hot and cold streams (a.k.a. broadcasting vs. lazy), but we will get to
@@ -206,7 +209,7 @@ Observable.just(1, 2, 3).subscribe(
 )
 ```
 
-Similarly we do not always need the implementation for all three event handlers. If we only want to handle the *OnNext* events and
+Similarly, we do not always need the implementation for all three event handlers. If we only want to handle the *OnNext* events and
 discard the *OnError* and *OnCompleted* events, we only provide the first lambda expression. Note that these events still happen,
 but that you just do not handle them!
 
