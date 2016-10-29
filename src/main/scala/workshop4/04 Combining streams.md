@@ -4,11 +4,11 @@ Combining streams
 An `Observable` is different from an `Iterable` in the sense that it can have a notion of time to it. The event
 stream of a button in user interface does not emit events constantly; it only emits an event whenever the button is clicked.
 Sometimes the button is clicked many times in a short period, other times it remains inactive for a while. The same holds for
-mouse moves, key presses and other event-based sources. More surprising sources are network responses and database query
-results: in a network it might take some time before the response on a request comes in; depending on the complexity of
-the query it may take a long time before the database has finished computing the result. Because of this notion of time
-in an `Observable`, there are a number of ways in which to combine various streams. In this section we will give an
-overview of the most notable and useful combine operators.
+mouse moves, key presses and other event-based sources. Other sources of events may be even more unpredictable. For example, 
+network responses and database query results: in a network it might take some time before the response to a request comes in; 
+depending on the complexity of the query it may take a long time before the database has finished computing the result. Because 
+of this notion of time in an `Observable`, there are a number of ways in which to combine various streams. In this section 
+we will give an overview of the most notable and useful combining operators.
 
 *Side note:* This notion of time does however not apply for all instances. For example, the primitive `Observable`s such
 as `Observable.just` emit their value(s) immediately, one after the other. These clearly do not have this notion of time
@@ -18,7 +18,7 @@ to them!
 `concat`/`++`
 -------------
 
-The simplest combine operator is [`concat`] (or `++` in RxScala). Given two arbitrary `Observable`s, `obs1` and `obs2`
+The simplest combining operator is [`concat`] (or `++` in RxScala). Given two arbitrary `Observable`s, `obs1` and `obs2`
 that emit values **of the same type**, `obs1 ++ obs2` first emits all elements from `obs1` and only starts emitting the
 values from `obs2` when `obs1` has had an `onCompleted`. You can view this operator as '*sequential composition*' in that
 it will first process everything from `obs1` and only then start processing `obs2`.
