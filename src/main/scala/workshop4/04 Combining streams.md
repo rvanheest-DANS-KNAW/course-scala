@@ -1,9 +1,9 @@
 Combining streams
 =================
 
-An `Observable` is different from any other collection in the sense that it can have a notion of time to it. The event
-stream of a button in user interface does not emit events constantly; it only emits an event whenever the button is pressed.
-Sometimes the button is pressed many times in a short period, other times it is almost never pressed. The same holds for
+An `Observable` is different from an `Iterable` in the sense that it can have a notion of time to it. The event
+stream of a button in user interface does not emit events constantly; it only emits an event whenever the button is clicked.
+Sometimes the button is clicked many times in a short period, other times it remains inactive for a while. The same holds for
 mouse moves, key presses and other event-based sources. More surprising sources are network responses and database query
 results: in a network it might take some time before the response on a request comes in; depending on the complexity of
 the query it may take a long time before the database has finished computing the result. Because of this notion of time

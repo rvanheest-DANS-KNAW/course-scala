@@ -1,10 +1,10 @@
 Observable
 ==========
 
-Although we can model a lot collections by using an `Iterable`, it is not suitable for all cases. For example, we are not
+Although we can model a lot of collections by using an `Iterable`, it is not suitable for all cases. For example, we are not
 able to model a collection of real-time mouse moves, key presses or button clicks like an `Iterable`. These collections
 do not have something like a `hasNext` and `next`. Instead, **events** come whenever they want to or when the environment
-generates them. Their source is something that you cannot control, i.e. slow down, speed up or influence with in any other way.
+generates them. Their source is something that you cannot control, i.e. slow down, speed up or influence in any other way.
 In other words, you cannot *pull* events from their source, but instead they are **pushed** to you. All you have to do is
 listen to the collection (often called a *stream*) and **react** to the events that you receive.
 
@@ -19,7 +19,7 @@ program flow or data that has to come from an external source (network call, fil
 block your program flow as well. These kinds of collections do not have an interactive interface and you therefore cannot
 pull the next element. Instead the data is **pushed** to you and you have to **react** to what you receive by processing
 it in some way. Therefore the *producer* is fully in charge of how fast or how slow the data is streaming towards you,
-while you as a *consumer* can only wait and react to what data comes in.
+whereas you as a *consumer* can only wait and react to what data comes in.
 
 We call these reactive collections *Observable*s. The next sections will make clear why this name was chosen. For now,
 let's first juxtapose the two kinds of collections.
@@ -32,7 +32,8 @@ let's first juxtapose the two kinds of collections.
 
 Types of events
 ---------------
-The contract of a reactive collection states that three types of events can be pushed from the producer to the consumer.
+The contract of a reactive collection distinguishes three types of events that occur while the producer pushes elements
+to the consumer:
 
   * The first type, **OnNext**, is the carrier of every element you receive. You can view it as a box with the element
     inside it. During the lifetime of a reactive collection, the producer will send 0 or more *OnNext* events to its consumer.
@@ -89,13 +90,13 @@ only bring it up when necessary.
 Streams of values
 -----------------
 With these three interfaces in place we can now start creating streams of values. Although most use cases of reactive
-collections are in real time data and nonblocking calculations/IO, it turns out that you can also use interactive collections
-as the source of a stream. In this case the `Observable` emit the elements of the `Iterable` one by one and consider them as
-events/data that is pushed to the `Observer`. Using an interactive source is especially useful for practicing as you have full
+collections are in the realm of real-time data, non-blocking calculations or I/O, it turns out that you can also use interactive collections
+as the source of a stream. In this case the `Observable` emits the elements of the `Iterable` one by one and considers them as
+events/data that is pushed to the `Observer`. Using an interactive source is especially useful for practising, as you have full
 control over the source.
 
 ### Your first `Observable`
-The most simple `Observable` is the one that emits a number of values as *OnNext* events and finishes with an *OnCompleted* event.
+The simplest `Observable` is the one that emits a number of values as *OnNext* events and finishes with an *OnCompleted* event.
 
 ```scala
 val emit123: Observable[Int] = Observable.just(1, 2, 3)
@@ -106,7 +107,7 @@ However, when you compile and run this code... nothing happens. That is because 
 If nobody listens, nothing happens!
 
 > side note: there is a distinction between hot and cold streams (a.k.a. broadcasting vs. lazy), but we will get to
-> that in workshop 5; for this workshop we only consider one `Observer` per stream
+> that in workshop 5; for this workshop we only consider one `Observer` per stream.
 
 To listen to a stream, we of course have to implement an `Observer`. In the code below we do this by printing custom
 messages for each of the three event types. For each value that is emitted by the `Observable` (`1`, `2` and `3`) the
@@ -226,7 +227,7 @@ factory methods do not suffice. For example, if you want to create an infinite s
 `Iterable` from the previous section, but that's not fun enough!
 
 For this Rx defines a function called `Observable.apply`. (*Note: RxJava calls this function `create`, whereas RxScala calls
-it `apply`!*) This function takes a lambda expression as its argument of type `Subscriber => Unit`. Here we find a new type,
+it `apply`!*) This function takes a lambda expression of type `Subscriber => Unit` as its argument. Here we find a new type,
 `Subscriber`. This type can be defined as the union of `Observer` and `Subscription`: it can listen to an `Observable` inside
 its `subscribe` method and it can unsubscribe itself from a stream. As we will see, this is very useful in certain circumstances!
 
@@ -251,6 +252,8 @@ def randomNumbers: Observable[Double] = {
 }
 ```
 
+***TODO: PLEASE ADD A CODE EXAMPLE OF HOW YOU WOULD USE randomNumbers, AS THIS IS NOT AT ALL OBVIOUS TO ME.***
+
 Another example of `Observable.apply` is taken from JavaFx. This is the newest generation of user interface libraries in the
 Java SDK. By default JavaFx uses other techniques than `Observable` to listen to streams of events (using `EventListener`s),
 but as we will see later, it is very useful to wrap these streams into an `Observable`. This wrapping can be done using
@@ -267,6 +270,7 @@ def getEvent[T <: InputEvent](node: Node, event: EventType[T]): Observable[T] = 
   }
   
   Observable.apply[T](subscriber => {
+    // Note that handler is assigned a lambda expression
     val handler = (e: T) => subscriber.onNext(e)
     
     node.addEventHandler(event, handler)
@@ -290,8 +294,8 @@ RxJava vs. RxScala
 ------------------
 There are many libraries that make use of reactive programming these days. Most of them, however, are written in Java
 and therefore expose the RxJava `Observable` rather than the RxScala one. There are some slight syntactical differences
-between RxJava and RxScala. One of them, as we have already seen, is `Observable.create` vs. `Observable.apply`. Other
-differences, as we will see in the rest of this workshop, are listed on the [RxScala comparison page].
+between RxJava and RxScala. One of them, as we have already seen, is `Observable.create` vs. `Observable.apply`. There are 
+other differences, as we will see in the rest of this workshop. A complete overview can be found on the [RxScala comparison page].
 
 Conversion between RxJava and RxScala can be done (as of RxScala_2.11, v0.26.3) using the `asScala` and `asJava`
 operators as shown below. *Note that you have to do an extra import to get this working!*

@@ -28,5 +28,3 @@ def generateInfiniteCollection: Iterable[Double] = {
     }
   }
 }
-
-
