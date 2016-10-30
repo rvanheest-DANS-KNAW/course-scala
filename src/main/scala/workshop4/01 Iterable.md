@@ -38,7 +38,7 @@ action is to be taken with `x`.
 [`foreach`]: http://www.scala-lang.org/api/current/index.html#scala.collection.Iterable@foreach(f:A=%3EUnit):Unit
 
 ```scala
-def printElements(itb: Iterable[T]): Unit = {
+def printElements[T](itb: Iterable[T]): Unit = {
   val itr = itb.iterator
   while (itr.hasNext) {
     println(itr.next())
@@ -81,12 +81,12 @@ def generateInfiniteCollection: Iterable[Double] = {
   }
 }
 
-generateInfiniteCollection.foreach(println)
+generateInfiniteCollection.foreach(println(_))
 ```
 
 To get only a finite number of elements from this collection you can just use the `take` operator that is defined on `Iterable`,
 as we discussed in the previous workshop.
 
 ```scala
-generateInfiniteCollection.take(5).foreach(println)
+generateInfiniteCollection.take(5).foreach(println(_))
 ```

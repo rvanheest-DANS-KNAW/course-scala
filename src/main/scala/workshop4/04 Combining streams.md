@@ -10,7 +10,7 @@ depending on the complexity of the query it may take a long time before the data
 of this notion of time in an `Observable`, there are a number of ways in which to combine various streams. In this section 
 we will give an overview of the most notable and useful combining operators.
 
-*Side note:* This notion of time does however not apply for all instances. For example, the primitive `Observable`s such
+*Side note:* This notion of time does, however, not apply to all instances. For example, the primitive `Observable`s such
 as `Observable.just` emit their value(s) immediately, one after the other. These clearly do not have this notion of time
 to them!
 
@@ -59,8 +59,10 @@ events to see the behavior in this case.
 ---------
 
 The [`flatMap`] operator in Rx works in the same way as in the Scala Collections API, as discussed in [workshop 3]. It's `map`
-part produces a new `Observable` for each element that comes in, which are flattened into a single `Observable` using the merge
-operator.
+part produces a new `Observable` for each element that comes in. The sequence of `Observable`s that is thus produced  is flattened 
+into a single `Observable` using the merge operator.
+
+![flatMap](https://raw.githubusercontent.com/wiki/ReactiveX/RxJava/images/rx-operators/flatMap.png)
 
 The example below uses the `Observable.just` and therefore the elements in `Observable.just(i, i)` are emitted first, before
 the next element of `Observable.just(1, 2, 3)` is processed. This means that the elements are emitted in sequence. This is
@@ -72,7 +74,6 @@ behavior as merge in that a *parallel composition* is applied.
 [`flatMap`]: http://reactivex.io/rxscala/scaladoc/index.html#rx.lang.scala.Observable@flatMap[R](f:T=>rx.lang.scala.Observable[R]):rx.lang.scala.Observable[R]
 [workshop 3]: ../workshop3/05%20list-for-comprehensions.md
 
-![flatMap](https://raw.githubusercontent.com/wiki/ReactiveX/RxJava/images/rx-operators/flatMap.png)
 
 ```scala
 Observable.just(1, 2, 3)

@@ -482,7 +482,7 @@ def fibonacci: Observable[Int] = {
   Observable.just(0)
     .repeat
     .scan((0, 1)) { case ((pp, p), _) => (p, pp + p) }
-    .map((_, i) => i)
+    .map { case (_, i) => i }
 }
 
 fibonacci.take(10).subscribe(println(_))
