@@ -3,7 +3,7 @@ import javafx.scene.Node
 import javafx.scene.input.InputEvent
 
 import rx.functions.Action1
-import rx.lang.scala.{Observable, Observer, Subscription}
+import rx.lang.scala.{Observable, Observer, Subscriber, Subscription}
 import rx.lang.scala.JavaConverters._
 
 import scala.language.implicitConversions

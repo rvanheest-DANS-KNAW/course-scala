@@ -30,13 +30,15 @@ the producer of the collection has to obey your commands and just serve the requ
 In languages like Java and Scala (*and many, many more!*), pull-based collections are so common that syntax has been made
 to make it even easier to use them. For example, using a general while-loop, you can pull each element from an `Iterable`
 using the `Iterator` and its `hasNext` and `next` methods. However, using the `Iterable`'s higher-order functions, you can
-achieve the same with a `foreach`. This function wraps the action to be taken for each element and does the while-loop for
+achieve the same. [`foreach`] is such a higher-order function. It wraps the action to be taken for each element and does the while-loop for
 you. On the other hand, this iteration process can also be written in a more Java-like style using a for-loop. Notice the
 similarities between the `foreach` function and the for-loop: both take an element `x` from the collection and specify what
 action is to be taken with `x`.
 
+[`foreach`]: http://www.scala-lang.org/api/current/index.html#scala.collection.Iterable@foreach(f:A=%3EUnit):Unit
+
 ```scala
-def printElements(itb: Iterable[T]): Unit = {
+def printElements[T](itb: Iterable[T]): Unit = {
   val itr = itb.iterator
   while (itr.hasNext) {
     println(itr.next())
@@ -79,12 +81,12 @@ def generateInfiniteCollection: Iterable[Double] = {
   }
 }
 
-generateInfiniteCollection.foreach(println)
+generateInfiniteCollection.foreach(println(_))
 ```
 
 To get only a finite number of elements from this collection you can just use the `take` operator that is defined on `Iterable`,
 as we discussed in the previous workshop.
 
 ```scala
-generateInfiniteCollection.take(5).foreach(println)
+generateInfiniteCollection.take(5).foreach(println(_))
 ```

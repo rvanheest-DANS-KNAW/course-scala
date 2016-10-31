@@ -1,22 +1,22 @@
 Operators on Observable
 =======================
 
-As we have discussed before, an `Observable` is a collection just like an `Iterable`. Their main difference, however,
-is that in an `Observable` data is **pushed** at you, while you **pull** data from an `Iterable`. Otherwise the two are
+As we have discussed before, an `Observable` is a collection just like an `Iterable`. They are different in that, 
+in an `Observable`, data is **pushed** *to* you, while you **pull** data *from* an `Iterable`. Otherwise the two are
 exactly the same! Therefore it is possible to have the same kinds of operators as we have seen with `Iterable` collections
 in [workshop 3]. We can have operators like `map`, `filter`, `take`, `drop`, `foldLeft`, etc.
 
 [workshop 3]: ../workshop3/README.md
 
-This section will introduce some basic operators on `Observable` and go over there behavior one by one. As there are
-300+ operators in total (and still increasing!) we are not able to discuss them all. However, as you get more experience
+This section will introduce some basic operators on `Observable` and go over their behaviors one by one. As there are
+300+ operators in total (and still increasing!), we are not able to discuss them all. However, as you get more experience
 with RxJava/RxScala, you will find that most operators are hardly ever used and that only a small subset is needed to
-get started.
+accomplish most tasks.
  
-The main source of wisdom on the behavior of each operator comes from the [Observable javadoc] page. Here each operator
-is described in great detail, including diagrams which we will discuss next. For RxScala similar information can be found
-on the [Observable scaladoc] page. See also the [RxScala comparison page] to compare naming conventions between RxJava
-and RxScala.
+The main source of wisdom on the behavior of each operator is the [Observable javadoc] page. Here each operator
+is described in great detail, including a special kind of diagram, which we will discuss next. For RxScala similar 
+information can be found on the [Observable scaladoc] page. See also the [RxScala comparison page] to compare naming 
+conventions between RxJava and RxScala.
 
 [Observable javadoc]: http://reactivex.io/RxJava/javadoc/rx/Observable.html
 [Observable scaladoc]: http://reactivex.io/rxscala/scaladoc/index.html#rx.lang.scala.Observable
@@ -26,15 +26,15 @@ and RxScala.
 Marble diagrams
 ---------------
 
-The [Observable javadoc] makes use so called marble diagrams. These show the behavior of a certain operator in a fairly
+The [Observable javadoc] makes use of so called marble diagrams. These show the behavior of a certain operator in a fairly
 simple and understandable way. For example, the diagram below shows an imaginary operator `flip`, which turns the marbles
 upside-down as they are emitted by the source `Observable`. It is important to learn how to read these kinds of diagrams,
 as this forms the best part of the documentation.
 
 ![flip](https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/legend.png)
 
-Some operators also have interactive marble diagrams, such that you can move the marbles and see the exact behavior of
-the operator. You can find this at [rxmarbles.com].
+Some operators also have interactive marble diagrams, which let you move the marbles and examine the exact behavior of
+the operator. You can find these at [rxmarbles.com].
 
 [rxmarbles.com]: http://rxmarbles.com/
 
@@ -54,16 +54,16 @@ numbers pass and discards all odd numbers.
 
 ```scala
 Observable.just(0, 1, 2, 3, 4, 5, 6, 7, 8, 9)
-  .filter(i => i % 2 == 0)
+  .filter(_ % 2 == 0)
 ```
 
 **Don't forget:** this code snippet returns an `Observable[Int]` and does not do anything! It only starts working once you
-subscribe to it, for example using `.subscribe(i => println(i))`.
+subscribe to it, for example using `.subscribe(i => println(i))`, or, shorter: `.subscribe(println(_))`
 
 ```scala
 Observable.just(0, 1, 2, 3, 4, 5, 6, 7, 8, 9)
-  .filter(i => i % 2 == 0)
-  .subscribe(i => println(i))
+  .filter(_ % 2 == 0)
+  .subscribe(println(_))
 // prints: 0, 2, 4, 6, 8
 ```
 
@@ -71,7 +71,7 @@ Observable.just(0, 1, 2, 3, 4, 5, 6, 7, 8, 9)
 `map`
 -----
 
-Another well known operator from the previous workshop is `map`. It also has a single argument, which is a function of
+Another well-known operator from the previous workshop is `map`. It also has a single argument, which is a function of
 type `T => R`. It takes each element in the stream, applies the function on it and sends the result down the stream.
 Note that no elements are discarded here!
 
@@ -79,18 +79,18 @@ Note that no elements are discarded here!
 
 ![map](https://raw.githubusercontent.com/wiki/ReactiveX/RxJava/images/rx-operators/map.png)
 
-The code below shows two simple use case for `map`. In the first example we transform every `Int` to a `String`, whereas
+The code below shows two simple use cases for `map`. In the first example we transform every `Int` to a `String` and
 in the second example we increment every `Int`.
 
 ```scala
 Observable.just(0, 1, 2, 3, 4, 5, 6, 7, 8, 9)
-  .map(i => i.toString)
-  .subscribe(s => println(s))
+  .map(_.toString)
+  .subscribe(println(_))
 // prints: "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"
 
 Observable.just(0, 1, 2, 3, 4, 5, 6, 7, 8, 9)
-  .map(i => i + 1)
-  .subscribe(i => println(i))
+  .map(_ + 1)
+  .subscribe(println(_))
 // prints: 1, 2, 3, 4, 5, 6, 7, 8, 9, 10
 ```
 
@@ -99,7 +99,7 @@ Chaining operations
 -------------------
 
 Rather than just having one operator for an `Observable`, we can chain operators into long sequences. The example below
-shows an `Observable[String]` where some elements are integer and other elements are not. Using the `filter` operator we
+shows an `Observable[String]` where some elements are integers and other elements are not. Using the `filter` operator we
 only keep those `String`s for which *all* characters are digits. After that we can safely `map` those to integers.
 
 We can do this operator chaining with all operators defined on `Observable` and thereby define the complex behavior that
@@ -107,9 +107,9 @@ is required in our software.
 
 ```scala
 Observable.just("81", "42", "twee", "150", "15een")
-  .filter(s => s.forall(c => c.isDigit))
-  .map(s => s.toInt)
-  .subscribe(i => println(i))
+  .filter(_.forall(_.isDigit))
+  .map(_.toInt)
+  .subscribe(println(_))
 // prints: 81, 42, 150
 ```
 
@@ -117,12 +117,12 @@ Observable.just("81", "42", "twee", "150", "15een")
 `foldLeft`
 ----------
 
-A third operator from the previous workshop is [`foldLeft`]. Given a collection of data, it calculated some form of
+A third operator from the previous workshop is [`foldLeft`]. Given a collection of data, it calculates some form of
 accumulation of the data, such as the sum or product of numbers or the concatenation of `String`s. This is also the
 case for the `Observable`: all events get accumulated and after the stream is *completed*, the resulting accumulation
 is emitted downstream.
 
-[`foldLeft`]: http://reactivex.io/rxscala/scaladoc/index.html#rx.lang.scala.Observable@foldLeft[R](initialValue:R)(accumulator:(R,T)=>R):rx.lang.scala.Observable[R]
+[`foldLeft`]: http://reactivex.io/rxscala/scaladoc/index.html#rx.lang.scala.Observable@foldLeft[R](initialValue:R\)\(accumulator:\(R,T)=>R\):rx.lang.scala.Observable[R]
 
 ![foldLeft](https://raw.githubusercontent.com/wiki/ReactiveX/RxJava/images/rx-operators/reduceSeed.png)
 
@@ -132,7 +132,7 @@ result is only emitted when the original stream completes!
 ```scala
 Observable.just(0, 1, 2, 3, 4)
   .foldLeft(0)((acc, i) => acc + i)
-  .subscribe(i => println(i))
+  .subscribe(println(_))
 // prints: 10
 ```
 
@@ -147,7 +147,7 @@ in that it accumulates the values of its `Observable`, but different in that it 
 In other words, it does not wait for an `onCompleted` event to emit the accumulated value, but rather accumulates the
 value and emit this value immediately.
 
-[`scan`]: http://reactivex.io/rxscala/scaladoc/index.html#rx.lang.scala.Observable@scan[R](initialValue:R)(accumulator:(R,T)=>R):rx.lang.scala.Observable[R])
+[`scan`]: http://reactivex.io/rxscala/scaladoc/index.html#rx.lang.scala.Observable@scan[R](initialValue:R\)\(accumulator:\(R,T)=>R\):rx.lang.scala.Observable[R]
 
 ![scan](https://raw.githubusercontent.com/wiki/ReactiveX/RxJava/images/rx-operators/scanSeed.png)
 
@@ -159,7 +159,7 @@ operator (which we will discuss below) right after the `scan`.
 ```scala
 Observable.just(0, 1, 2, 3, 4)
   .scan(0)((acc, i) => acc + i)
-  .subscribe(i => println(i))
+  .subscribe(println(_))
 // prints: 0, 0, 1, 3, 6, 10
 ```
 
@@ -180,12 +180,12 @@ For example:
 ```scala
 Observable.just(1, 2, 3, 2, 4, 1, 5)
   .distinct
-  .subscribe(i => println(i))
+  .subscribe(println(_))
 // prints: 1, 2, 3, 4, 5
 
 Observable.just("a", "abc", "ab", "aaa", "b")
-  .distinct(s => s.length)
-  .subscribe(s => println(s))
+  .distinct(_.length)
+  .subscribe(println(_))
 // prints: "a", "abc", "ab"
 ```
 
@@ -203,11 +203,11 @@ Regarding `distinctUntilChanged` we have the same kinds of operators, [with] and
 ```scala
 Observable.just(1, 2, 2, 3, 2, 2, 2)
   .distinctUntilChanged
-  .subscribe(i => println(i))
+  .subscribe(println(_))
 
 Observable.just("a", "b", "ab", "abc", "bc")
   .distinctUntilChanged(s => s.length)
-  .subscribe(s => println(s))
+  .subscribe(println(_))
 ```
 
 [with]: http://reactivex.io/rxscala/scaladoc/index.html#rx.lang.scala.Observable@distinctUntilChanged[U](keySelector:T=>U):rx.lang.scala.Observable[T]
@@ -220,7 +220,7 @@ Observable.just("a", "b", "ab", "abc", "bc")
 ![distinctUntilChanged-with-selector](https://raw.githubusercontent.com/wiki/ReactiveX/RxJava/images/rx-operators/distinctUntilChanged.key.png)
 
 As a final example, `distinct` is used in the [`jobMonitor`] in [`easy-ingest-dispatcher`]. Here every couple of seconds
-a list of all files and folders in the `depositsDirectory` is asked from the filesystem. However, we are only interested
+the list of all files and folders in the `depositsDirectory` is retrieved from the filesystem. However, we are only interested
 in the ones that were just added. Given the `Observable[File]` we gained before, we can then do a `distinct(_.getName)`
 where we check the distinctness of the `File`'s name.
 
@@ -251,7 +251,7 @@ for now and come back to it in the next workshop.
 ```scala
 Observable.just(1, 2, 3, 4, 5)
   .drop(3)
-  .subscribe(i => println(i))
+  .subscribe(println(_))
 // prints: 4, 5
 ```
 
@@ -267,8 +267,8 @@ remains `true`.
 
 ```scala
 Observable.just(1, 2, 3, 4, 5)
-  .dropWhile(i => i < 3)
-  .subscribe(i => println(i))
+  .dropWhile(_ < 3)
+  .subscribe(println(_))
 // prints: 3, 4, 5
 ```
 
@@ -287,7 +287,7 @@ elements after that. Notice in the diagram below that, because after `n` element
 ```scala
 Observable.just(0, 1, 2, 3, 4)
   .take(3)
-  .subscribe(i => println(i))
+  .subscribe(println(_))
 // prints: 0, 1, 2
 ```
 
@@ -304,7 +304,7 @@ Side effects
 ------------
 
 So far we have seen a couple of operators that transform, filter or limit a stream of events/data. These operators are
-supposed to run in a *pure* context, meaning that they are not allowed to do side effects such as writing to standard
+supposed to run in a *pure* context, meaning that they are not allowed to have side effects such as writing to standard
 output, a file or a database, mutating state, or putting a thread to sleep. This is all part of the functional style
 that is incorporated in the Rx libraries.
 
@@ -317,7 +317,7 @@ the event on which's occurence the side effect needs to take place, prefixed wit
   the stream. Note that it does not consume the error, but only applies it to the given function and propagate it to
   downstream when its finished.
 * [doOnCompleted] - executes the code block given as argument whenever the stream encounters an `onCompleted` event.
-  Note that it does not consume this event!
+  Note that it does not consume this event! ***TODO: WHAT DOES CONSUMING AN EVENT MEAN?***
 * [doOnSubscribe] - executes the code block given as argument whenever the stream is subscribed to by any `Observer`.
 * [doOnUnsubscribe] - executes the code block given as argument whenever the stream is unsubcribed from.
 * [doOnTerminate] - executes the code block given as argument whenever the stream encounters either an `onCompleted` or
@@ -385,6 +385,8 @@ Observable.error(new Exception("ERROR!!!"))
 ```
 
 
+***TODO: WHAT OTHER PURPOSES DO THESE METHODS HAVE? HOW DO THOSE PURPOSES COMPARE TO THE PURPPOSE OF THE SUBSCRIBER?***
+
 Error handling
 --------------
 
@@ -394,9 +396,11 @@ service terminates itself whenever an error occurs; especially when it is not a 
 after which the stream recovers itself and carries on.
 
 This is exactly what the [`retry`] operators can do. When included in the operator sequence, they consume the error, do
-not propagate it and resubscribe to the upstream `Observable`. If no parameter is given to `retry`, it will retry forever,
+not propagate it and resubscribe (***???***) to the upstream `Observable`. If no parameter is given to `retry`, it will retry forever,
 without ever propagating an error. When [specified as an argument], the `retry` will only happen a finite amount of times,
 after which the latest error is still propagated.
+
+***TODO: SEE ??? ABOVE: THE OPERATOR RESUBSCRIBES? I THOUGHT THE OBSERVER WAS WHAT WAS SUBSCRIBED***
 
 [`retry`]: http://reactivex.io/rxscala/scaladoc/index.html#rx.lang.scala.Observable@retry:rx.lang.scala.Observable[T]
 [specified as an argument]: http://reactivex.io/rxscala/scaladoc/index.html#rx.lang.scala.Observable@retry(retryCount:Long):rx.lang.scala.Observable[T]
@@ -421,9 +425,9 @@ Again it is often useful to first log the error using `doOnError` before consumi
 
 ```scala
 Observable.error(new Exception("useful error message"))
-  .doOnError(e => println(s"onError: ${e.getMessage}"))
+  .doOnError(println(s"onError: ${_.getMessage}"))
   .onErrorResumeNext(e => Observable.just(-1))
-  .subscribe(i => println(i))
+  .subscribe(println(_))
 ```
 
 
@@ -431,14 +435,14 @@ An example
 ----------
 
 There are many more operators that could be discussed in this section. The operators listed above are the ones that are
-most notably used in the current code of [EASY]. In this final section on operators we will look at a real life example
+most notably used in the current code of [EASY]. In this final section on operators we will look at an example
 of using an `Observable`. We will create a stream of numbers that form the [Fibonacci sequence]. Starting of with the
-values `{0, 1}`, this sequence accumulates the previous two values as its next value: `fib(n) = fib(n - 1) + fib(n - 2)`.
+values `{0, 1}`, this sequence adds up the previous two values as its next value: `fib(n) = fib(n - 1) + fib(n - 2)`.
 So, this first elements of this (infinite) sequence are: `{1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, ...}`
 
 To write this in terms of `Observable`, we start with an `Observable.just(0).repeat` that will emit an infinite stream of
 elements (in this case they are all `0`). We will not actually use the value itself, but rather use the fact that an
-element is emitted (a.k.a. an `onNext` occured). 
+element is emitted (i.e. an `onNext` occurred). 
   
 The accumulation phase is done using a `scan` operation: `.scan((0, 1)) { case ((pp, p), _) => (p, pp + p) }`. Here we use
 a *tuple* as the seed value: `(0, 1)`. To get the next element of the sequence, we calculate the sum of these values (`pp + p`)
@@ -450,7 +454,7 @@ in the sequence. Since we're only interested in the *current* value, we have to 
 side of the tuple: `.map(_._2)`.
 
 In the full code example below we define the function `fibonacci` to be this infinite stream of values. It is good practice to
-leave out any bounds on the number of elements (a.k.a. how many of the elements in the sequence do you want) in this function
+leave out any bounds on the number of elements (i.e. how many of the elements in the sequence do you want) in this function
 and let the user decide how many he wants. Some might be interested in the first `n` elements of the sequence, others might
 be interested in all elements less then `n` or all *even* elements less than a certain number `n`...
 
@@ -478,12 +482,12 @@ def fibonacci: Observable[Int] = {
   Observable.just(0)
     .repeat
     .scan((0, 1)) { case ((pp, p), _) => (p, pp + p) }
-    .map(_._2)
+    .map { case (_, i) => i }
 }
 
-fibonacci.take(10).subscribe(i => println(i))
-fibonacci.takeWhile(n => n < 100).subscribe(i => println(i))
-fibonacci.filter(n => n % 2 == 0).takeWhile(n => n < 1000).subscribe(i => println(i))
+fibonacci.take(10).subscribe(println(_))
+fibonacci.takeWhile(_ < 100).subscribe(println(_))
+fibonacci.filter(_ % 2 == 0).takeWhile(_ < 1000).subscribe(println(_))
 ```
 
 This code can also be found [here], for you to play with.

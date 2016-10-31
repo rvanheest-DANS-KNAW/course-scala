@@ -1,16 +1,16 @@
 Combining streams
 =================
 
-An `Observable` is different from any other collection in the sense that it can have a notion of time to it. The event
-stream of a button in user interface does not emit events constantly; it only emits an event whenever the button is pressed.
-Sometimes the button is pressed many times in a short period, other times it is almost never pressed. The same holds for
-mouse moves, key presses and other event-based sources. More surprising sources are network responses and database query
-results: in a network it might take some time before the response on a request comes in; depending on the complexity of
-the query it may take a long time before the database has finished computing the result. Because of this notion of time
-in an `Observable`, there are a number of ways in which to combine various streams. In this section we will give an
-overview of the most notable and useful combine operators.
+An `Observable` is different from an `Iterable` in the sense that it can have a notion of time to it. The event
+stream of a button in user interface does not emit events constantly; it only emits an event whenever the button is clicked.
+Sometimes the button is clicked many times in a short period, other times it remains inactive for a while. The same holds for
+mouse moves, key presses and other event-based sources. Other sources of events may be even more unpredictable. For example, 
+network responses and database query results: in a network it might take some time before the response to a request comes in; 
+depending on the complexity of the query it may take a long time before the database has finished computing the result. Because 
+of this notion of time in an `Observable`, there are a number of ways in which to combine various streams. In this section 
+we will give an overview of the most notable and useful combining operators.
 
-*Side note:* This notion of time does however not apply for all instances. For example, the primitive `Observable`s such
+*Side note:* This notion of time does, however, not apply to all instances. For example, the primitive `Observable`s such
 as `Observable.just` emit their value(s) immediately, one after the other. These clearly do not have this notion of time
 to them!
 
@@ -18,7 +18,7 @@ to them!
 `concat`/`++`
 -------------
 
-The simplest combine operator is [`concat`] (or `++` in RxScala). Given two arbitrary `Observable`s, `obs1` and `obs2`
+The simplest combining operator is [`concat`] (or `++` in RxScala). Given two arbitrary `Observable`s, `obs1` and `obs2`
 that emit values **of the same type**, `obs1 ++ obs2` first emits all elements from `obs1` and only starts emitting the
 values from `obs2` when `obs1` has had an `onCompleted`. You can view this operator as '*sequential composition*' in that
 it will first process everything from `obs1` and only then start processing `obs2`.
@@ -59,8 +59,10 @@ events to see the behavior in this case.
 ---------
 
 The [`flatMap`] operator in Rx works in the same way as in the Scala Collections API, as discussed in [workshop 3]. It's `map`
-part produces a new `Observable` for each element that comes in, which are flattened into a single `Observable` using the merge
-operator.
+part produces a new `Observable` for each element that comes in. The sequence of `Observable`s that is thus produced  is flattened 
+into a single `Observable` using the merge operator.
+
+![flatMap](https://raw.githubusercontent.com/wiki/ReactiveX/RxJava/images/rx-operators/flatMap.png)
 
 The example below uses the `Observable.just` and therefore the elements in `Observable.just(i, i)` are emitted first, before
 the next element of `Observable.just(1, 2, 3)` is processed. This means that the elements are emitted in sequence. This is
@@ -72,7 +74,6 @@ behavior as merge in that a *parallel composition* is applied.
 [`flatMap`]: http://reactivex.io/rxscala/scaladoc/index.html#rx.lang.scala.Observable@flatMap[R](f:T=>rx.lang.scala.Observable[R]):rx.lang.scala.Observable[R]
 [workshop 3]: ../workshop3/05%20list-for-comprehensions.md
 
-![flatMap](https://raw.githubusercontent.com/wiki/ReactiveX/RxJava/images/rx-operators/flatMap.png)
 
 ```scala
 Observable.just(1, 2, 3)
