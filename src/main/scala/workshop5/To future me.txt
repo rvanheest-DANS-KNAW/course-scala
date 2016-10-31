@@ -1,5 +1,6 @@
 Workshop 5 - Rx continued
 - testing Observable
+- Observable.defer
 - hot vs cold Observable
     + Observable.just etc. are cold
     + Reactive source (mouse moves) is hot
