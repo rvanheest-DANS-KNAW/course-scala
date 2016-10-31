@@ -309,15 +309,15 @@ output, a file or a database, mutating state, or putting a thread to sleep. This
 that is incorporated in the Rx libraries.
 
 To perform side effects, we have special methods to our disposal to do so. These are usually identified by the name of
-the event on which's occurence the side effect needs to take place, prefixed with `do`:
+the event on which's occurrence the side effect needs to take place, prefixed with `do`. Each operator takes a function as its
+argument, which is executed whenever the specific event occurs. Note that the event is passed on to the next operator after the
+function is executed.
 
 * [doOnNext] - takes a function of type `T => Unit` that is applied with every element of the stream, after which the
   original element is passed on downstream.
 * [doOnError] - takes a function of type `Throwable => Unit` and applies it to the `onError` event that might terminate
-  the stream. Note that it does not consume the error, but only applies it to the given function and propagate it to
-  downstream when its finished.
+  the stream.
 * [doOnCompleted] - executes the code block given as argument whenever the stream encounters an `onCompleted` event.
-  Note that it does not consume this event! ***TODO: WHAT DOES CONSUMING AN EVENT MEAN?***
 * [doOnSubscribe] - executes the code block given as argument whenever the stream is subscribed to by any `Observer`.
 * [doOnUnsubscribe] - executes the code block given as argument whenever the stream is unsubcribed from.
 * [doOnTerminate] - executes the code block given as argument whenever the stream encounters either an `onCompleted` or
@@ -332,8 +332,8 @@ the event on which's occurence the side effect needs to take place, prefixed wit
 [doOnTerminate]: http://reactivex.io/rxscala/scaladoc/index.html#rx.lang.scala.Observable@doOnTerminate(onTerminate:=>Unit):rx.lang.scala.Observable[T]
 [doAfterTerminate]: http://reactivex.io/rxscala/scaladoc/index.html#rx.lang.scala.Observable@doAfterTerminate(action:=>Unit):rx.lang.scala.Observable[T]
 
-In general these operators are fairly useful for debugging an operator sequence, to see what elements are going through
-it or what is going on inside.
+One frequent use case for these operators is debugging inside an operator sequence. With these `doOnXXX` operators you can find
+out what elements are going through the operator sequence.
 
 ```scala
 Observable.just(1, 2, 3, 4)
@@ -384,8 +384,40 @@ Observable.error(new Exception("ERROR!!!"))
  */
 ```
 
+Another use case for `doOnNext` is to perform a certain side effect to each element in the `Observable`, such as adding the elements
+to a `Queue` or `Map`. This is a particular example from [`easy-pid-generator`], where each element in an `Observable` of JSON `String`s
+is put into a concurrent `Map` before it is potentially processed further in later stages of the operator sequence. This is set up in
+such a way that another process can read values from this `Map` that were put there using the `doOnNext`.
 
-***TODO: WHAT OTHER PURPOSES DO THESE METHODS HAVE? HOW DO THOSE PURPOSES COMPARE TO THE PURPPOSE OF THE SUBSCRIBER?***
+A simplification of a use case like this is shown below. Here an arbitrary `Observable` is queue-ing its data before continuing with
+the rest of its procedure. Another process, that is interested in this data, can pull the data out of the queue at its own pace or wait
+for a next element to be put in the queue.
+
+```scala
+val queue = new mutable.Queue[Int]
+Observable.just(1, 2, 3, 4)
+  .map(_ * 2) // or any other sequence of operators
+  .doOnNext(queue.enqueue(_))
+  .filter(_ % 4 == 0) // or any other sequence of operators
+  .subscribe(i => println(s"even number: $i"))
+```
+
+[`easy-pid-generator`]: https://github.com/rvanheest-DANS-KNAW/easy-pid-generator/blob/087269956a0201ab67edbcf7a793ac17e26dfd3c/src/main/scala/nl/knaw/dans/easy/pid/microservice/PidHazelcastService.scala#L62
+
+A third and final use case of these operators can be found in [`easy-pid-generator` as well]. In this instance the main program
+can only terminate once the `Observable` is completed. In order to do so, we use `doOnCompleted` to signal that it is safe to
+terminate the main program.
+
+[`easy-pid-generator` as well]: https://github.com/rvanheest-DANS-KNAW/easy-pid-generator/blob/087269956a0201ab67edbcf7a793ac17e26dfd3c/src/main/scala/nl/knaw/dans/easy/pid/microservice/PidHazelcastService.scala#L58
+
+Finally, the careful reader may already have noticed some overlap between the `subscribe` method and the `doOnNext`, `doOnError`
+and `doOnCompleted`. The functions in these `doOnXXX` operators can be replaced with the arguments of the `subscribe` method.
+For example: `obs.doOnNext(println(_)).subscribe` is equivalent to `obs.subscribe(println(_))`. As the latter achieves the same
+result with fewer operators, this one is preferred over the former. On the other hand, `obs.doOnError(_.printStackTrace()).subscribe`
+can also be written as `obs.subscribe(_ => {}, _.printStackTrace())`, but requires the extra boilerplate code of `_ => {}`, since
+the `onError` handler is the second argument of `subscribe`. As to date there are no definitive style guides on RxJava/RxScala, and
+it is therefore a matter of taste which way of writing to choose.
+
 
 Error handling
 --------------
@@ -396,11 +428,9 @@ service terminates itself whenever an error occurs; especially when it is not a 
 after which the stream recovers itself and carries on.
 
 This is exactly what the [`retry`] operators can do. When included in the operator sequence, they consume the error, do
-not propagate it and resubscribe (***???***) to the upstream `Observable`. If no parameter is given to `retry`, it will retry forever,
-without ever propagating an error. When [specified as an argument], the `retry` will only happen a finite amount of times,
-after which the latest error is still propagated.
-
-***TODO: SEE ??? ABOVE: THE OPERATOR RESUBSCRIBES? I THOUGHT THE OBSERVER WAS WHAT WAS SUBSCRIBED***
+not propagate it and restart the upstream `Observable`. This latter bit is important, since the upstream `Observable` *terminated*
+with an exception. If no parameter is given to `retry`, it will retry forever, without ever propagating an error. When
+[specified as an argument], the `retry` will only happen a finite amount of times, after which the latest error is still propagated.
 
 [`retry`]: http://reactivex.io/rxscala/scaladoc/index.html#rx.lang.scala.Observable@retry:rx.lang.scala.Observable[T]
 [specified as an argument]: http://reactivex.io/rxscala/scaladoc/index.html#rx.lang.scala.Observable@retry(retryCount:Long):rx.lang.scala.Observable[T]
@@ -429,6 +459,23 @@ Observable.error(new Exception("useful error message"))
   .onErrorResumeNext(e => Observable.just(-1))
   .subscribe(println(_))
 ```
+
+
+`repeat`
+--------
+
+While `retry` recovers an `Observable` from terminating with an exception, the [`repeat`] operator recovers an `Observable` from
+terminating with an `onCompleted` event. This is particularly useful when creating infinite streams of events from finite `Observable`s.
+Instead of creating an infinite stream in an `Observable.apply`, as done earlier with the *random numbers stream*, you can also define
+the generation for a finite part of the stream and call repeat to let it continue and produce data indefinitely.
+
+[`repeat`]: http://reactivex.io/rxscala/scaladoc/index.html#rx.lang.scala.Observable@repeat:rx.lang.scala.Observable[T]
+
+![repeat](https://raw.githubusercontent.com/wiki/ReactiveX/RxJava/images/rx-operators/repeat.o.png)
+
+For example, in the example below we require an infinite stream of `0` values (just as a way to kick off another calculation).
+This can be achieved by defining an `Observable` that only emits one `0` and calling `repeat` on it to make the stream produce
+infinitely many values: `Observable.just(0).repeat`.
 
 
 An example

@@ -1,5 +1,7 @@
 import rx.lang.scala.Observable
 
+import scala.collection.mutable
+
 Observable.just(0, 1, 2, 3, 4, 5, 6, 7, 8, 9)
   .filter(i => i % 2 == 0)
   .subscribe(i => println(i))
@@ -72,6 +74,13 @@ Observable.error(new Exception("ERROR!!!"))
   .doOnTerminate { println("on terminate") }
   .doAfterTerminate { println("after terminate") }
   .subscribe(_ => {}, e => println(s"the error was $e"))
+
+val queue = new mutable.Queue[Int]
+Observable.just(1, 2, 3, 4)
+  .map(_ * 2)
+  .doOnNext(queue.enqueue(_))
+  .filter(_ % 4 == 0)
+  .subscribe(i => println(s"even number: $i"))
 
 Observable.error(new Exception("useful error message"))
   .doOnError(e => println(s"onError: ${e.getMessage}"))
