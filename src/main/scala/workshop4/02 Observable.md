@@ -310,6 +310,15 @@ curious already, you'll find this 'better' implementation in the [Pi Approximati
 [Pi Approximation assignment]: ./assignments/PiApproximation.scala
 
 
+Small assignment
+----------------
+
+1. Create an `Observable` that emits a number of hardcoded `String`s. (for example `"abc"`, `"def"`, `"ghi"`, `"jkl"` and `"mno"`)
+2. Subscribe to this `Observable` and provide appropriate `println` statements for all three types of events.
+
+*To avoid spoilers, you can find the solution at the end of this section.* 
+
+
 RxJava vs. RxScala
 ------------------
 There are many libraries that make use of reactive programming these days. Most of them, however, are written in Java
@@ -326,7 +335,7 @@ import rx.lang.scala.JavaConverters._
 def javaObservableToScalaObservableConverter(): Unit = {
 
   // given a RxJava Observable (for example from some third party library) ...
-  def getJavaObservableFromSomewhere: rx.Observable[Int] ={
+  def getJavaObservableFromSomewhere: rx.Observable[Int] = {
     rx.Observable.just(1, 2, 3)
   }
 
@@ -357,3 +366,14 @@ def scalaObservableToJavaObservableConverter(): Unit = {
 ```
  
 [RxScala comparison page]: http://reactivex.io/rxscala/comparison.html
+
+
+Solution to the small assignment
+--------------------------------
+
+```scala
+Observable.just("abc", "def", "ghi", "jkl", "mno").subscribe(
+  s => println(s"next String: $s"),
+  e => println(s"an error occurred: ${e.getMessage}"),
+  () => println("completed"))
+```

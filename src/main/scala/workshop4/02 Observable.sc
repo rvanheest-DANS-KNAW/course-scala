@@ -104,3 +104,8 @@ def scalaObservableToJavaObservableConverter(): Unit = {
   // ... and convert it back to a RxJava Subscription using `asJavaSubscription`.
   val javaSubscriptionAgain: rx.Subscription = scalaSubscription.asJavaSubscription
 }
+
+Observable.just("abc", "def", "ghi", "jkl", "mno").subscribe(
+  s => println(s"next String: $s"),
+  e => println(s"an error occurred: ${e.getMessage}"),
+  () => println("completed"))
