@@ -3,7 +3,7 @@ import javafx.scene.Node
 import javafx.scene.input.InputEvent
 
 import rx.functions.Action1
-import rx.lang.scala.{Observable, Observer, Subscriber, Subscription}
+import rx.lang.scala.{Observable, Observer, Subscription}
 import rx.lang.scala.JavaConverters._
 
 import scala.language.implicitConversions
@@ -57,6 +57,8 @@ def randomNumbers: Observable[Double] = {
     }
   })
 }
+
+randomNumbers.take(5).subscribe(value => println(s"next random number: $value"))
 
 def getEvent[T <: InputEvent](node: Node, event: EventType[T]): Observable[T] = {
   implicit def toHandler(action: T => Unit): EventHandler[T] = {

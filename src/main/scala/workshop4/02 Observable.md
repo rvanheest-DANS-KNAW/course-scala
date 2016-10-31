@@ -21,8 +21,8 @@ pull the next element. Instead the data is **pushed** to you and you have to **r
 it in some way. Therefore the *producer* is fully in charge of how fast or how slow the data is streaming towards you,
 whereas you as a *consumer* can only wait and react to what data comes in.
 
-We call these reactive collections *Observable*s. The next sections will make clear why this name was chosen. For now,
-let's first juxtapose the two kinds of collections.
+The library we discuss in this workshop (RxJava/RxScala) calls such a reactive collection an `Observable`. The next sections
+will make clear why this name was chosen. For now, let's first juxtapose the two kinds of collections.
 
 | Collection  | Java/Scala type | Interaction | In charge |
 |-------------|-----------------|-------------|-----------|
@@ -86,14 +86,20 @@ terminates (either with an *OnError* or *OnCompleted* event) it will automatical
 stream. You don't have to do anything with the `Subscription` yourself in those cases! For now we ignore this class and
 only bring it up when necessary.
 
+**To summarize:** when an `Observer` *subscribes* to an `Observable`, a `Subscription` is *returned*. From that point on,
+the `Observer` receives all `onNext`, `onError` and `onCompleted` events that are produces by the `Observable`. Whenever
+the `Observer` does not wish to receive any more events, it uses the `Subscription` to *unsubscribe*.
+
+![Observable Diagram](./../../resources/workshop4/ObservableDiagram.png)
+
 
 Streams of values
 -----------------
 With these three interfaces in place we can now start creating streams of values. Although most use cases of reactive
-collections are in the realm of real-time data, non-blocking calculations or I/O, it turns out that you can also use interactive collections
-as the source of a stream. In this case the `Observable` emits the elements of the `Iterable` one by one and considers them as
-events/data that is pushed to the `Observer`. Using an interactive source is especially useful for practising, as you have full
-control over the source.
+collections are in the realm of real-time data, non-blocking calculations or non-blocking I/O, it turns out that you can also use
+interactive collections as the source of a stream. In this case the `Observable` emits the elements of the `Iterable` one by one
+and considers them as events/data that is pushed to the `Observer`. Using an interactive source is especially useful for practising,
+as you have full control over the source.
 
 ### Your first `Observable`
 The simplest `Observable` is the one that emits a number of values as *OnNext* events and finishes with an *OnCompleted* event.
@@ -232,7 +238,7 @@ it `apply`!*) This function takes a lambda expression of type `Subscriber => Uni
 its `subscribe` method and it can unsubscribe itself from a stream. As we will see, this is very useful in certain circumstances!
 
 To create an infinite stream of random numbers, we will use `Observable.apply` and fill in the lambda expression as shown
-below. Given the `subscriber` that we get for free in the lambda, we can first create a `generator` from `scala.util.Random`.
+below. Given the `subscriber` that we get as argument of the lambda, we can first create a `generator` from `scala.util.Random`.
 Then we continue with a simple while-loop that generates a number and sends it through the stream by calling `subscriber.onNext`.
 This while-loop is executed as long as the `Observer` is not unsubscribed from the stream. Note that this is in principle an
 infinite stream and that therefore no `subscriber.onCompleted` is called!
@@ -252,7 +258,20 @@ def randomNumbers: Observable[Double] = {
 }
 ```
 
-***TODO: PLEASE ADD A CODE EXAMPLE OF HOW YOU WOULD USE randomNumbers, AS THIS IS NOT AT ALL OBVIOUS TO ME.***
+As mentioned above, just calling `randomNumbers` does not do anything other than *creating* the `Observable`. To get it started with
+producing infinite amounts of random numbers, we must *subscribe* to it.
+
+```scala
+randomNumbers.subscribe(value => println(s"next random number: $value"))
+```
+
+Compare this to the [the previous section](01%20Iterable.md#infinite-collections), where we also 'subscribed' (using `foreach`) to the
+`Iterable`. Just as we did in that section, we can limit the stream of random numbers to a fixed amount using `take`. We will discuss
+this and many other operators later.
+
+```scala
+randomNumbers.take(5).subscribe(value => println(s"next random number: $value"))
+```
 
 Another example of `Observable.apply` is taken from JavaFx. This is the newest generation of user interface libraries in the
 Java SDK. By default JavaFx uses other techniques than `Observable` to listen to streams of events (using `EventListener`s),
@@ -280,14 +299,15 @@ def getEvent[T <: InputEvent](node: Node, event: EventType[T]): Observable[T] = 
 ```
 
 **Warning:** as many things can go wrong in creating your own `Observable`, it is [generally advised] to stay away from
-`Observable.apply` as much as possible! It is the source of many bugs and lots of head scratching. Instead use existing
-factory methods from the API under all possible circumstances. Only use it when you can't solve your problem in another
+`Observable.apply` as much as possible!!! It is the source of many bugs and lots of head scratching! Instead use existing
+factory methods from the API under all possible circumstances. Only use it when you can't solve your problem in any other
 way, such as `getEvent` (although even this is already wrapped in the [RxJavaFx] library!). **Spoiler alert:**
-`randomNumbers` can also be created without `Observable.apply`, but we will get to that when we touch on `Scheduler`s in
-the next workshop.
+`randomNumbers` can also be created without `Observable.apply`, but we will get to that in the next workshop. If you're
+curious already, you'll find this 'better' implementation in the [Pi Approximation assignment].
 
 [generally advised]: http://stackoverflow.com/a/36173021/2389405
 [RxJavaFx]: https://github.com/ReactiveX/RxJavaFX
+[Pi Approximation assignment]: ./assignments/PiApproximation.scala
 
 
 RxJava vs. RxScala

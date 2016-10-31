@@ -46,7 +46,7 @@ def printElements[T](itb: Iterable[T]): Unit = {
 }
 
 def printElementsWithForEach[T](itb: Iterable[T]): Unit = {
-  itb.foreach(x => println(x))
+  itb.foreach(println)
 }
 
 def printElementsWithLoop[T](itb: Iterable[T]): Unit = {
@@ -81,12 +81,12 @@ def generateInfiniteCollection: Iterable[Double] = {
   }
 }
 
-generateInfiniteCollection.foreach(println(_))
+generateInfiniteCollection.foreach(println)
 ```
 
 To get only a finite number of elements from this collection you can just use the `take` operator that is defined on `Iterable`,
 as we discussed in the previous workshop.
 
 ```scala
-generateInfiniteCollection.take(5).foreach(println(_))
+generateInfiniteCollection.take(5).foreach(println)
 ```
