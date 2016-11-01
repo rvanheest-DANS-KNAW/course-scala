@@ -106,6 +106,16 @@ def scalaObservableToJavaObservableConverter(): Unit = {
 }
 
 Observable.just("abc", "def", "ghi", "jkl", "mno").subscribe(
-  s => println(s"next String: $s"),
+  s => println(s"next word: $s"),
+  e => println(s"an error occurred: ${e.getMessage}"),
+  () => println("completed"))
+
+Observable.just(List('a', 'b', 'c'), List('d', 'e', 'f'), List('g', 'h', 'i')).subscribe(
+  s => println(s"next list of characters: $s"),
+  e => println(s"an error occurred: ${e.getMessage}"),
+  () => println("completed"))
+
+Observable.from(List("abc", "def", "ghi").flatMap(_.toList)).subscribe(
+  s => println(s"next character: $s"),
   e => println(s"an error occurred: ${e.getMessage}"),
   () => println("completed"))

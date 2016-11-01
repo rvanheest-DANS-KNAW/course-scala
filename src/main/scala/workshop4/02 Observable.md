@@ -310,11 +310,14 @@ curious already, you'll find this 'better' implementation in the [Pi Approximati
 [Pi Approximation assignment]: ./assignments/PiApproximation.scala
 
 
-Small assignment
-----------------
+Small exercises
+---------------
 
 1. Create an `Observable` that emits a number of hardcoded `String`s. (for example `"abc"`, `"def"`, `"ghi"`, `"jkl"` and `"mno"`)
 2. Subscribe to this `Observable` and provide appropriate `println` statements for all three types of events.
+3. Create a similar `Observable` that emits `List[Char]`s. (for example `['a', 'b', 'c']`, `['d', 'e', 'f']`, `['g', 'h', 'i']`, etc.)
+4. Write a final `Observable[Char]` that given a `List[String]`, emits each `Char` in each `String` separately.
+   **Hint:** a `String` can be converted to a `List[Char]` using `toList`
 
 *To avoid spoilers, you can find the solution at the end of this section.* 
 
@@ -368,12 +371,36 @@ def scalaObservableToJavaObservableConverter(): Unit = {
 [RxScala comparison page]: http://reactivex.io/rxscala/comparison.html
 
 
-Solution to the small assignment
---------------------------------
+Solution to the small exercises
+-------------------------------
 
-```scala
-Observable.just("abc", "def", "ghi", "jkl", "mno").subscribe(
-  s => println(s"next String: $s"),
-  e => println(s"an error occurred: ${e.getMessage}"),
-  () => println("completed"))
-```
+1. Using `Observable.just` you can emit each `String` as a separate 'event', followed by an `onCompleted` event.
+
+    ```scala
+    Observable.just("abc", "def", "ghi", "jkl", "mno").subscribe(
+      s => println(s"next String: $s"),
+      e => println(s"an error occurred: ${e.getMessage}"),
+      () => println("completed"))
+    ```
+2. Subscribe using the three lambdas above.
+3. A first guess for emitting `List` might be to use `Observable.from`. However, this *takes* a `List` and emits each element
+   *separately*. That is however not what we want! Instead we want to emit the `List`s themselves. Therefore we need to use
+   `Observable.just` again and give these lists as its arguments.
+
+    ```scala
+    Observable.just(List('a', 'b', 'c'), List('d', 'e', 'f'), List('g', 'h', 'i')).subscribe(
+      s => println(s"next list of characters: $s"),
+      e => println(s"an error occurred: ${e.getMessage}"),
+      () => println("completed"))
+    ```
+4. Since a `String` can be transformed into a `List[Char]` using `toList`, you can transform a `List[String]` into a `List[Char]`
+   using `toList` and `flatMap`. You can then give this resulting `List[Char]` to the `Observable.from` that emits each `Char`
+   in the `List` separately.
+   
+    ```scala
+    Observable.from(List("abc", "def", "ghi").flatMap(_.toList)).subscribe(
+     s => println(s"next character: $s"),
+     e => println(s"an error occurred: ${e.getMessage}"),
+     () => println("completed"))
+    ```
+
