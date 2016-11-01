@@ -203,4 +203,13 @@ logins.subscribe(creds => label.setText(s"latest login: $creds"))
 ```
 
 Play around a bit with the application and maybe add a couple of `doOnNext(x => println(x))` lines to see what is going
-on at each moment in time.  
+on at each moment in time.
+
+
+Assignments
+-----------
+
+At the end of this section you should be able to do the [Discard Third Element] and [Wikipedia Suggestion] assignments.
+
+[Discard Third Element assignment]: ./assignments/DiscardThirdElement.md
+[Wikipedia Suggestion]: ./assignments/WikipediaSuggestion.md

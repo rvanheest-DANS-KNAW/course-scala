@@ -540,3 +540,11 @@ fibonacci.filter(_ % 2 == 0).takeWhile(_ < 1000).subscribe(println(_))
 This code can also be found [here], for you to play with.
 
 [here]: assignments/Fibonacci.scala
+
+
+Assignment
+----------
+
+At the end of this section you should be able to do the [Pi Approximation] assignment.
+
+[Pi Approximation]: ./assignments/PiApproximation.md
