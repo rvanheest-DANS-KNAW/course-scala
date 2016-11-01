@@ -322,6 +322,40 @@ Small exercises
 *To avoid spoilers, you can find the solution at the end of this section.* 
 
 
+Where Rx is used
+----------------
+
+Rx views itself as "*a library for composing asynchronous and event based programs by using observable sequences*". The last words
+already give away that we are talking about some kind of collection. The special thing is that the elements are not present on
+beforehand, but instead that they come in at some arbitrary point in time. Only then can we get access to that particular element
+and can we process it according to our liking.
+
+Furthermore Rx can do *event based* and *asynchronous* programming. This means that we can send off a computationally or I/O heavy
+operation to another thread or service and continue with other work without blocking the current thread while waiting for the result
+of that operation. Instead of *waiting* until the computation has finished and *blocking* the thread or (continuously) *polling* whether
+the computation is done, we create a 'channel' that sends the result to us whenever it is finished. Using the `subscribe` we specify
+what should be done with the result whenever it comes in. In that way, we can keep working on other things while the operation is being
+executed and *react* to the result coming in.
+
+While the computation might only return a single value inside the `Observable`, we can also have multiple results coming in.
+For example, if we want to execute a large query on a database, we can create an `Observable` such that each record is emitted
+separately as the database computes the results. We don't wait for all results to be collected, but instead *react* to the individual
+records coming in.
+
+In that sense a computation is similar to the event streams in a user interface. As we will see later, each button press, mouse move
+or key press is an event that may or may not require processing. Instead of having complex event handlers and often ending up in
+'call-back hell', we can use Rx to wrap these events into `Observable` streams and process and combine them to our liking. Here it
+is also important to have the asynchronous programming, as we want a user interface to still be responsive whenever it kicks off a
+heavy operation. While waiting for the result(s), the user should still be able to interact with the application rather than finding
+itself with a seemingly frozen screen.
+
+Similar use cases are based on real-time data, such as stock tickers, clocks or doing [live sentiment analysis on a Twitter feed].
+As you don't know when these events come in, it is quite practical to have you notified as soon as an event is coming in and process
+it as soon as possible.
+
+[live sentiment analysis on a Twitter feed]: https://vimeo.com/187941239
+
+
 RxJava vs. RxScala
 ------------------
 There are many libraries that make use of reactive programming these days. Most of them, however, are written in Java
