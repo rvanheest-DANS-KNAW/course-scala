@@ -466,16 +466,12 @@ Observable.error(new Exception("useful error message"))
 
 While `retry` recovers an `Observable` from terminating with an exception, the [`repeat`] operator recovers an `Observable` from
 terminating with an `onCompleted` event. This is particularly useful when creating infinite streams of events from finite `Observable`s.
-Instead of creating an infinite stream in an `Observable.apply`, as done earlier with the *random numbers stream*, you can also define
-the generation for a finite part of the stream and call repeat to let it continue and produce data indefinitely.
+For example, if you want to have an infinite stream of `0` values, you can achieve this by defining an `Observable` that only emits
+one `0` and calling `repeat` on it to make the stream produce infinitely many values: `Observable.just(0).repeat`.
 
 [`repeat`]: http://reactivex.io/rxscala/scaladoc/index.html#rx.lang.scala.Observable@repeat:rx.lang.scala.Observable[T]
 
 ![repeat](https://raw.githubusercontent.com/wiki/ReactiveX/RxJava/images/rx-operators/repeat.o.png)
-
-For example, in the example below we require an infinite stream of `0` values (just as a way to kick off another calculation).
-This can be achieved by defining an `Observable` that only emits one `0` and calling `repeat` on it to make the stream produce
-infinitely many values: `Observable.just(0).repeat`.
 
 
 An example

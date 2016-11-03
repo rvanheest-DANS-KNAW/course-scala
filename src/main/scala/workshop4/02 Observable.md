@@ -225,91 +225,6 @@ Observable.just(1, 2, 3).subscribe(value => println(s"received onNext event with
 ```
 
 
-Creating a custom `Observable`
-------------------------------
-So far we have used predefined functions to create `Observable`s. Soon you will however discover that in certain cases these
-factory methods do not suffice. For example, if you want to create an infinite stream of elements (equivalent to the one in
-[the previous section](01%20Iterable.md)), you cannot use `just`, `empty` or `error`. Surely you can use `from` with the
-`Iterable` from the previous section, but that's not fun enough!
-
-For this Rx defines a function called `Observable.apply`. (*Note: RxJava calls this function `create`, whereas RxScala calls
-it `apply`!*) This function takes a lambda expression of type `Subscriber => Unit` as its argument. Here we find a new type,
-`Subscriber`. This type can be defined as the union of `Observer` and `Subscription`: it can listen to an `Observable` inside
-its `subscribe` method and it can unsubscribe itself from a stream. As we will see, this is very useful in certain circumstances!
-
-To create an infinite stream of random numbers, we will use `Observable.apply` and fill in the lambda expression as shown
-below. Given the `subscriber` that we get as argument of the lambda, we can first create a `generator` from `scala.util.Random`.
-Then we continue with a simple while-loop that generates a number and sends it through the stream by calling `subscriber.onNext`.
-This while-loop is executed as long as the `Observer` is not unsubscribed from the stream. Note that this is in principle an
-infinite stream and that therefore no `subscriber.onCompleted` is called!
-
-```scala
-import scala.util.Random
-
-def randomNumbers: Observable[Double] = {
-  Observable.apply(subscriber => {
-    val generator = Random
-
-    while (!subscriber.isUnsubscribed) {
-      val number = generator.nextDouble()
-      subscriber.onNext(number)
-    }
-  })
-}
-```
-
-As mentioned above, just calling `randomNumbers` does not do anything other than *creating* the `Observable`. To get it started with
-producing infinite amounts of random numbers, we must *subscribe* to it.
-
-```scala
-randomNumbers.subscribe(value => println(s"next random number: $value"))
-```
-
-Compare this to the [the previous section](01%20Iterable.md#infinite-collections), where we also 'subscribed' (using `foreach`) to the
-`Iterable`. Just as we did in that section, we can limit the stream of random numbers to a fixed amount using `take`. We will discuss
-this and many other operators later.
-
-```scala
-randomNumbers.take(5).subscribe(value => println(s"next random number: $value"))
-```
-
-Another example of `Observable.apply` is taken from JavaFx. This is the newest generation of user interface libraries in the
-Java SDK. By default JavaFx uses other techniques than `Observable` to listen to streams of events (using `EventListener`s),
-but as we will see later, it is very useful to wrap these streams into an `Observable`. This wrapping can be done using
-`Observable.apply`, as shown below. This is a bit more involved, but the essence is that it calls the `handler` function
-every time an event of type `T` occurs, which calls `subscriber.onNext` in turn. The `subscriber.add` then tells the
-`Observable` to call `node.removeEventHandler` when the `Observer` is being unsubscribed from the stream. This way the
-resources are all cleaned up afterwards and no memory leaks will occur! Again notice that this is an infinite stream,
-as no terminal event is sent in this `Observable.apply`. Only by unsubscribing manually you can stop listening!
-
-```scala
-def getEvent[T <: InputEvent](node: Node, event: EventType[T]): Observable[T] = {
-  implicit def toHandler(action: T => Unit): EventHandler[T] = {
-    new EventHandler[T] { override def handle(e: T): Unit = action(e) }
-  }
-  
-  Observable.apply[T](subscriber => {
-    // Note that handler is assigned a lambda expression
-    val handler = (e: T) => subscriber.onNext(e)
-    
-    node.addEventHandler(event, handler)
-    subscriber.add { node.removeEventHandler(event, handler) }
-  })
-}
-```
-
-**Warning:** as many things can go wrong in creating your own `Observable`, it is [generally advised] to stay away from
-`Observable.apply` as much as possible!!! It is the source of many bugs and lots of head scratching! Instead use existing
-factory methods from the API under all possible circumstances. Only use it when you can't solve your problem in any other
-way, such as `getEvent` (although even this is already wrapped in the [RxJavaFx] library!). **Spoiler alert:**
-`randomNumbers` can also be created without `Observable.apply`, but we will get to that in the next workshop. If you're
-curious already, you'll find this 'better' implementation in the [Pi Approximation assignment].
-
-[generally advised]: http://stackoverflow.com/a/36173021/2389405
-[RxJavaFx]: https://github.com/ReactiveX/RxJavaFX
-[Pi Approximation assignment]: ./assignments/PiApproximation.scala
-
-
 Small exercises
 ---------------
 
@@ -359,9 +274,8 @@ it as soon as possible.
 RxJava vs. RxScala
 ------------------
 There are many libraries that make use of reactive programming these days. Most of them, however, are written in Java
-and therefore expose the RxJava `Observable` rather than the RxScala one. There are some slight syntactical differences
-between RxJava and RxScala. One of them, as we have already seen, is `Observable.create` vs. `Observable.apply`. There are 
-other differences, as we will see in the rest of this workshop. A complete overview can be found on the [RxScala comparison page].
+and therefore expose the RxJava `Observable` rather than the RxScala one. There are, however, some slight syntactical
+differences between RxJava and RxScala. A complete overview can be found on the [RxScala comparison page].
 
 Conversion between RxJava and RxScala can be done (as of RxScala_2.11, v0.26.3) using the `asScala` and `asJava`
 operators as shown below. *Note that you have to do an extra import to get this working!*

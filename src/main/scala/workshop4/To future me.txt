@@ -14,8 +14,7 @@ v Observable
         * geen subscribe == nothing happens!
     v subscription/unsubscribe
     v Observable.error/Observable.empty/Observable.never/Observable.from
-    v Observable.apply/create
-        *
+    x Observable.apply/create
         * think about unsubscribes, subscribe, etc.
     v Infinite-ness
     v RxJava vs RxScala

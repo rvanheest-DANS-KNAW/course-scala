@@ -14,10 +14,11 @@ It is **not** the goal of this exercise to understand the algorithm or to have f
 number of operators in Rx. Each of the steps below represents *a single operator* to be added to a chain of subsequent
 operators.
 
-1. Implement the function `random` that generates an infinite stream of random numbers between 0.0 and 1.0. **Hint:** we
-   already made an implementation in [02 Observable.md], so you can just use that. However, you can also try to come up with
-   an implementation that does not use `Observable.apply` directly. Use the [RxScala variant] of [`Observable.fromCallable`]
-   and [`repeat`].
+1. Given is the function `random` that generates an infinite stream of random numbers between 0.0 and 1.0. Make sure you
+   understand this what this function does and why it does it. Subscribe to the resulting `Observable` to see what it does
+   in practice. Also try to understand what `Observable.defer` is doing; we haven't discussed it yet, but the documentation
+   should give you some pointers. Check out what happens when we peel off the `Observable.defer`. **Hint:** this construction
+   is equal to the [RxScala variant] of [`Observable.fromCallable`].
 2. In the `main` method, call `random` and make groups of 2 random numbers; this should yield an `Observable[Seq[Int]]`;
    allocate this to `groupsOfTwo`.
 3. Each group of 2 numbers (type `Seq[Int]`) represents the `x`- and `y`-coordinate of a single point respectively. Using
