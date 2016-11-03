@@ -228,9 +228,9 @@ Observable.just(1, 2, 3).subscribe(value => println(s"received onNext event with
 Small exercises
 ---------------
 
-1. Create an `Observable` that emits a number of hardcoded `String`s. (for example `"abc"`, `"def"`, `"ghi"`, `"jkl"` and `"mno"`)
+1. Create an `Observable[String]` that emits a number of hardcoded `String`s. (for example `"abc"`, `"def"`, `"ghi"`, `"jkl"` and `"mno"`)
 2. Subscribe to this `Observable` and provide appropriate `println` statements for all three types of events.
-3. Create a similar `Observable` that emits `List[Char]`s. (for example `['a', 'b', 'c']`, `['d', 'e', 'f']`, `['g', 'h', 'i']`, etc.)
+3. Create a similar `Observable[List[Char]]` that emits `List[Char]`s. (for example `['a', 'b', 'c']`, `['d', 'e', 'f']`, `['g', 'h', 'i']`, etc.)
 4. Write a final `Observable[Char]` that given a `List[String]`, emits each `Char` in each `String` separately.
    **Hint:** a `String` can be converted to a `List[Char]` using `toList`
 
@@ -300,7 +300,8 @@ def scalaObservableToJavaObservableConverter(): Unit = {
 
   // given a function that takes a RxJava Observable as its input and returns a RxJava Subscription ...
   def useJavaObservableSomewhere(obs: rx.Observable[_ <: Int]): rx.Subscription = {
-    obs.subscribe(new Action1[Int] { override def call(i: Int): Unit = println(i) }) // RxJava requires an Action1 object here rather than a lambda expression.
+    // RxJava requires an Action1 object here rather than a lambda expression.
+    obs.subscribe(new Action1[Int] { override def call(i: Int): Unit = println(i) }) 
   }
 
   val scalaObservable: Observable[Int] = Observable.just(1, 2, 3)
@@ -308,7 +309,8 @@ def scalaObservableToJavaObservableConverter(): Unit = {
   // ... you can give a RxScala Observable as input and call `asJava`on it ...
   val javaSubscription: rx.Subscription = useJavaObservableSomewhere(scalaObservable.asJava)
 
-   // ... after which you get a RxJava Subscription back, which can be used again in a RxScala setting using `asScalaSubscription` ...
+   // ... after which you get a RxJava Subscription back, which can be used again in a RxScala
+   //     setting using `asScalaSubscription` ...
   val scalaSubscription: Subscription = javaSubscription.asScalaSubscription
 
   // ... and convert it back to a RxJava Subscription using `asJavaSubscription`.
