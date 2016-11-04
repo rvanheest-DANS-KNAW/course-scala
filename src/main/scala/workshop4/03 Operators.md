@@ -231,7 +231,7 @@ where we check the distinctness of the `File`'s name.
 `drop`/`skip`
 -------------
 
-Another way get rid of certain elements is to `drop` a certain number of elements, in this case the first elements of a
+Another way to get rid of certain elements is to `drop` a certain number of elements, in this case the first elements of a
 stream. You can specify [a certain number of elements] to be dropped or specify [a timeframe] in which all elements are dropped.
 
 **Note 1:** `drop` always acts on the first elements of a stream!
@@ -439,7 +439,15 @@ with an exception. If no parameter is given to `retry`, it will retry forever, w
 
 In [`easy-ingest-dispatcher`] the `retry` is included in the [`run` method] to ensure that the `jobMonitor` always keeps
 running, even if an error occurs. Since `retry` consumes the exception, it is a good practice to have a `doOnError` right
-before it that logs the exception.
+before it, that logs the exception.
+
+```scala
+observableThatMayOrMayNotThrowSomeKindOfError // the error is propagated as an onError event
+  .doOnError(e => log.error(s"error ocurred: ${e.getMessage}", e)) // the error is logged and propagated again
+  .retry // the error is consumed (NOT propagated!!!) and the stream starts again
+  // some more operators
+  .subscribe(/* do something */)
+```
 
 [`run` method]: https://github.com/rvanheest-DANS-KNAW/easy-ingest-dispatcher/blob/7f802ad62fa78a74b628a43f58f050599c2ce59d/src/main/scala/nl/knaw/dans/easy/ingest_dispatcher/EasyIngestDispatcher.scala#L63
 
