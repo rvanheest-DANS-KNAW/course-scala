@@ -23,3 +23,4 @@ Workshop 5 - Rx continued
 - ...
 - use cases
 - sorting with time?
+- mouse double click events (https://docs.google.com/presentation/d/1YPX313eueDcTDApDHwb5Gm_X2EIorHJYLy29SRN1pRM/edit#slide=id.g1894345347_0_38)
