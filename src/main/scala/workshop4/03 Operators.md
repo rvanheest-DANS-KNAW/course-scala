@@ -315,13 +315,11 @@ function is executed.
 
 * [doOnNext] - takes a function of type `T => Unit` that is applied with every element of the stream, after which the
   original element is passed on downstream.
-* [doOnError] - takes a function of type `Throwable => Unit` and applies it to the `onError` event that might terminate
-  the stream.
-* [doOnCompleted] - executes the code block given as argument whenever the stream encounters an `onCompleted` event.
+* [doOnError] - takes a function of type `Throwable => Unit` and applies it to the *Error* event that might terminate the stream.
+* [doOnCompleted] - executes the code block given as argument whenever the stream encounters a *Completed* event.
 * [doOnSubscribe] - executes the code block given as argument whenever the stream is subscribed to by any `Observer`.
 * [doOnUnsubscribe] - executes the code block given as argument whenever the stream is unsubcribed from.
-* [doOnTerminate] - executes the code block given as argument whenever the stream encounters either an `onCompleted` or
-  `onError` event.
+* [doOnTerminate] - executes the code block given as argument whenever the stream encounters either a *Completed* or *Error* event.
 * [doAfterTerminate] - executes the code block given as argument after the stream is unsubscribed from.
 
 [doOnNext]: http://reactivex.io/rxscala/scaladoc/index.html#rx.lang.scala.Observable@doOnNext(onNext:T=>Unit):rx.lang.scala.Observable[T]
@@ -422,10 +420,10 @@ it is therefore a matter of taste which way of writing to choose.
 Error handling
 --------------
 
-As mentioned before, `onError` is a terminal event, meaning that once this event happens, no other events like `onNext`,
-`onError` or `onCompleted` can ever occur in this stream. However, in production level systems it is not expected that a
-service terminates itself whenever an error occurs; especially when it is not a fatal error. Preferably the error is logged,
-after which the stream recovers itself and carries on.
+As mentioned before, *Error* is a terminal event, meaning that once this event happens, no other events like *Next*, *Error* or
+*Completed* can ever occur in this stream. However, in production level systems it is not expected that a service terminates itself
+whenever an error occurs; especially when it is not a fatal error. Preferably the error is logged, after which the stream recovers
+itself and carries on.
 
 This is exactly what the [`retry`] operators can do. When included in the operator sequence, they consume the error, do
 not propagate it and restart the upstream `Observable`. This latter bit is important, since the upstream `Observable` *terminated*
@@ -451,7 +449,7 @@ observableThatMayOrMayNotThrowSomeKindOfError // the error is propagated as an o
 
 [`run` method]: https://github.com/rvanheest-DANS-KNAW/easy-ingest-dispatcher/blob/7f802ad62fa78a74b628a43f58f050599c2ce59d/src/main/scala/nl/knaw/dans/easy/ingest_dispatcher/EasyIngestDispatcher.scala#L63
 
-Another way of dealing with an `onError` event is by using [`onErrorResumeNext`]. This operator takes a function of type
+Another way of dealing with an *Error* event is by using [`onErrorResumeNext`]. This operator takes a function of type
 `Throwable => Observable[T]`, where the `Throwable` is the exception encountered in the `onError` event and `Observable[T]`
 is the stream with which to continue the operator sequence.
 
@@ -473,7 +471,7 @@ Observable.error(new Exception("useful error message"))
 --------
 
 While `retry` recovers an `Observable` from terminating with an exception, the [`repeat`] operator recovers an `Observable` from
-terminating with an `onCompleted` event. This is particularly useful when creating infinite streams of events from finite `Observable`s.
+terminating with a *Completed* event. This is particularly useful when creating infinite streams of events from finite `Observable`s.
 For example, if you want to have an infinite stream of `0` values, you can achieve this by defining an `Observable` that only emits
 one `0` and calling `repeat` on it to make the stream produce infinitely many values: `Observable.just(0).repeat`.
 

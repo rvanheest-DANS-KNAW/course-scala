@@ -23,8 +23,8 @@ that emit values **of the same type**, `obs1 ++ obs2` first emits all elements f
 values from `obs2` when `obs1` has had an `onCompleted`. You can view this operator as '*sequential composition*' in that
 it will first process everything from `obs1` and only then start processing `obs2`.
 
-If `obs1` emits an `onError` event, `concat` will just propagate this (just as every other event), but will **not** continue
-with `obs2`, since `onError` is a terminating event!
+If `obs1` emits an *Error* event, `concat` will just propagate this (just as every other event), but will **not** continue
+with `obs2`, since *Error* is a terminating event!
 
 [`concat`]: http://reactivex.io/rxscala/scaladoc/index.html#rx.lang.scala.Observable@++[U>:T](that:rx.lang.scala.Observable[U]):rx.lang.scala.Observable[U]
 
@@ -44,9 +44,9 @@ val obs2 = Observable.just(4, 5, 6).doOnCompleted(println("  obs2 completed"))
 
 In contrast to `concat`, [`merge`] will process `obs1` and `obs2` at the same time ('*parallel composition*'). This operator
 'listens' to both `Observable`s and emits the elements of both streams. The marble diagram below shows the case in which `obs1`
-terminates with an `onError` event. In this case the resulting `Observable` terminates as well and will no longer emit elements
+terminates with an *Error* event. In this case the resulting `Observable` terminates as well and will no longer emit elements
 from the other stream that is still running successfully. [RxMarbles' `merge` example] on the other hand shows the successful
-case in which both `Observable`s terminate naturally with an `onCompleted` event. Drag around the `onNext` and `onCompleted`
+case in which both `Observable`s terminate naturally with an `onCompleted` event. Drag around the *Next* and *Completed*
 events to see the behavior in this case.
 
 [`merge`]: http://reactivex.io/rxscala/scaladoc/index.html#rx.lang.scala.Observable@merge[U>:T](that:rx.lang.scala.Observable[U]):rx.lang.scala.Observable[U]

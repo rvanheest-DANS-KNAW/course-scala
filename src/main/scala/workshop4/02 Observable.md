@@ -35,23 +35,23 @@ Types of events
 The contract of a reactive collection distinguishes three types of events that occur while the producer pushes elements
 to the consumer:
 
-  * The first type, **OnNext**, is the carrier of every element you receive. You can view it as a box with the element
-    inside it. During the lifetime of a reactive collection, the producer will send 0 or more *OnNext* events to its consumer.
-  * The second type of events is the **OnError** event. This event signals that something went wrong in the collection.
-    An *OnError* event signals the sudden, exceptional 'death' of a reactive collection and after it no other event will
-    or can ever occur! The *OnError* event carries the `Throwable` that caused its termination with it, so you can always
+  * The first type, **Next**, is the carrier of every element you receive. You can view it as a box with the element
+    inside it. During the lifetime of a reactive collection, the producer will send 0 or more *Next* events to its consumer.
+  * The second type of events is the **Error** event. This event signals that something went wrong in the collection.
+    An *Error* event signals the sudden, exceptional 'death' of a reactive collection and after it no other event will
+    or can ever occur! The *Error* event carries the `Throwable` that caused its termination with it, so you can always
     see what caused this exceptional behavior and act accordingly.
   * Finally, the third type of event signals the normal and peaceful termination of a stream. Whenever the producer decides
-    it will never send any *OnNext* events again, it will conclude the stream with an **OnCompleted** event. This is an
+    it will never send any *Next* events again, it will conclude the stream with a **Completed** event. This is an
     empty event, it does not contain any value and can be considered as just a flag to signal to the consumer that no event
     will ever come after it.
 
-In practice the *OnCompleted* and *OnError* events are a signal for the consumer to stop listening to the stream. As no
+In practice the *Completed* and *Error* events are a signal for the consumer to stop listening to the stream. As no
 event will ever come after it, there is no need to continue observing the collection!
 
 Given these three types of events, we can derive an interface that the consumer has to obey to in order to observe the
-stream. It has to be able to accept each of these three events, `onNext`, `onError` and `onCompleted`. As the goal of this
-interface is observe a stream of events, it is called `Observer`.
+stream. This interface consists of three event handlers, one for each type of event: `onNext`, `onError` and `onCompleted`.
+As the goal of this interface is observe a stream of events, it is called `Observer`.
 
 ```scala
 trait Observer[T] {
@@ -82,12 +82,12 @@ trait Subscription {
 ```
 
 In practice it turns out that you do not have to do anything with the `Subscription` in most cases. If the `Observable`
-terminates (either with an *OnError* or *OnCompleted* event) it will automatically unsubscribe its `Observer`s from the
+terminates (either with an *Error* or *Completed* event) it will automatically unsubscribe its `Observer`s from the
 stream. You don't have to do anything with the `Subscription` yourself in those cases! For now we ignore this class and
 only bring it up when necessary.
 
 **To summarize:** when an `Observer` *subscribes* to an `Observable`, a `Subscription` is *returned*. From that point on,
-the `Observer` receives all `onNext`, `onError` and `onCompleted` events that are produces by the `Observable`. Whenever
+the `Observer` receives all `onNext`, `onError` and `onCompleted` calls that are produces by the `Observable`. Whenever
 the `Observer` does not wish to receive any more events, it uses the `Subscription` to *unsubscribe*.
 
 ![Observable Diagram](./../../resources/workshop4/ObservableDiagram.png)
@@ -102,7 +102,7 @@ and considers them as events/data that is pushed to the `Observer`. Using an int
 as you have full control over the source.
 
 ### Your first `Observable`
-The simplest `Observable` is the one that emits a number of values as *OnNext* events and finishes with an *OnCompleted* event.
+The simplest `Observable` is the one that emits a number of values as *Next* events and finishes with a *Completed* event.
 
 ```scala
 val emit123: Observable[Int] = Observable.just(1, 2, 3)
@@ -117,29 +117,29 @@ If nobody listens, nothing happens!
 
 To listen to a stream, we of course have to implement an `Observer`. In the code below we do this by printing custom
 messages for each of the three event types. For each value that is emitted by the `Observable` (`1`, `2` and `3`) the
-`onNext` method is executed, after which `onCompleted` is called. Note that even though we implemented `onError` here,
-this method is never called!
+`onNext` event handler method is executed, after which `onCompleted` is called. Note that even though we implemented
+`onError` here, this method is never called!
 
 ```scala
 def observer: Observer[Int] = new Observer[Int] {
   override def onNext(value: Int) =
-    println(s"received onNext event with value: $value")
+    println(s"received Next event with value: $value")
 
   override def onError(error: Throwable) =
-    println(s"""received onError event of type ${error.getClass.getSimpleName} and message "${error.getMessage}"""")
+    println(s"""received Error event of type ${error.getClass.getSimpleName} and message "${error.getMessage}"""")
 
   override def onCompleted() =
-    println("received onCompleted event")
+    println("received Completed event")
 }
 ```
 
 Now calling `emit123.subscribe(observer)` with give the following output:
 
 ```
-received onNext event with value: 1
-received onNext event with value: 2
-received onNext event with value: 3
-received onCompleted event
+received Next event with value: 1
+received Next event with value: 2
+received Next event with value: 3
+received Completed event
 ```
 
 If you're following along by typing code: :bouquet::bouquet::bouquet: **Congratulations, you have made your first subscription!!!** :bouquet::bouquet::bouquet:
@@ -158,14 +158,14 @@ Using the `Observer` as defined above, we get the output below. Notice again tha
 `onNext` is called, followed by `onCompleted` at the end of the whole sequence.
 
 ```
-received onNext event with value: 1
-received onNext event with value: 2
-received onNext event with value: 3
-received onNext event with value: 4
-received onCompleted event
+received Next event with value: 1
+received Next event with value: 2
+received Next event with value: 3
+received Next event with value: 4
+received Completed event
 ```
 
-Another primitive stream is the `Observable` that only emits an *OnError* event. Use the `Observable.error` for this with
+Another primitive stream is the `Observable` that only emits an *Error* event. Use the `Observable.error` for this with
 an instance of `Throwable` as its argument. This stream does not emit any values but only terminates with an exception.
 
 ```scala
@@ -176,11 +176,11 @@ emitError.subscribe(observer)
 This will generate the following output in the console:
 
 ```
-received onError event of type Exception and message "something went wrong"
+received Error event of type Exception and message "something went wrong"
 ```
 
 The obvious counterpart of `Observable.error` is `Observable.empty`, which also does not emit no values and only terminates
-naturally with an *OnCompleted*.
+naturally with a *Completed* event.
 
 ```scala
 val emitEmpty: Observable[Int] = Observable.empty
@@ -190,11 +190,11 @@ emitEmpty.subscribe(observer)
 This of course gives the following console output:
 
 ```
-received onCompleted event
+received Completed event
 ```
 
-Finally, we can also create a stream that does completely nothing: it does not emit any elements with *OnNext*, nor does it
-terminate with *OnError* or *OnCompleted*. It will just run *forever* without doing anything! <sup>(my favorite `Observable`)</sup>
+Finally, we can also create a stream that does completely nothing: it does not emit any elements with *Next* events, nor does it
+terminate with *Error* or *Completed*. It will just run *forever* without doing anything! <sup>(my favorite `Observable`)</sup>
 You can of course subscribe to this `Observable`, but you will never see any output with it.
 
 ```scala
@@ -210,18 +210,18 @@ passing the three implementations as lambda expressions to the `subscribe` metho
 
 ```scala
 Observable.just(1, 2, 3).subscribe(
-    value => println(s"received onNext event with value: $value"),
-    error => println(s"""received onError event of type ${error.getClass.getSimpleName} and message "${error.getMessage}""""),
-    () => println("received onCompleted event")
+    value => println(s"received Next event with value: $value"),
+    error => println(s"""received Error event of type ${error.getClass.getSimpleName} and message "${error.getMessage}""""),
+    () => println("received Completed event")
 )
 ```
 
-Similarly, we do not always need the implementation for all three event handlers. If we only want to handle the *OnNext* events and
-discard the *OnError* and *OnCompleted* events, we only provide the first lambda expression. Note that these events still happen,
+Similarly, we do not always need the implementation for all three event handlers. If we only want to handle the *Next* events and
+discard the *Error* and *Completed* events, we only provide the first lambda expression. Note that these events still happen,
 but that you just do not handle them!
 
 ```scala
-Observable.just(1, 2, 3).subscribe(value => println(s"received onNext event with value: $value"))
+Observable.just(1, 2, 3).subscribe(value => println(s"received Next event with value: $value"))
 ```
 
 
@@ -324,7 +324,7 @@ def scalaObservableToJavaObservableConverter(): Unit = {
 Solution to the small exercises
 -------------------------------
 
-1. Using `Observable.just` you can emit each `String` as a separate 'event', followed by an `onCompleted` event.
+1. Using `Observable.just` you can emit each `String` as a separate 'event', followed by a *Completed* event.
 
     ```scala
     Observable.just("abc", "def", "ghi", "jkl", "mno").subscribe(

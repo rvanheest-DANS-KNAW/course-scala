@@ -11,11 +11,11 @@ val emitEmpty: Observable[Int] = Observable.empty
 val emitNever: Observable[Int] = Observable.never
 
 def observer: Observer[Int] = new Observer[Int] {
-  override def onNext(value: Int) = println(s"received onNext event with value: $value")
+  override def onNext(value: Int) = println(s"received Next event with value: $value")
 
-  override def onError(error: Throwable) = println(s"""received onError event of type ${error.getClass.getSimpleName} and message "${error.getMessage}"""")
+  override def onError(error: Throwable) = println(s"""received Error event of type ${error.getClass.getSimpleName} and message "${error.getMessage}"""")
 
-  override def onCompleted() = println("received onCompleted event")
+  override def onCompleted() = println("received Completed event")
 }
 
 emit123.subscribe(observer)
@@ -29,17 +29,17 @@ emitEmpty.subscribe(observer)
 emitNever.subscribe(observer)
 
 emit123.subscribe(
-  value => println(s"received onNext event with value: $value"),
-  error => println(s"""received onError event of type ${error.getClass.getSimpleName} and message "${error.getMessage}""""),
-  () => println("received onCompleted event")
+  value => println(s"received Next event with value: $value"),
+  error => println(s"""received Error event of type ${error.getClass.getSimpleName} and message "${error.getMessage}""""),
+  () => println("received Completed event")
 )
 
 emit123.subscribe(
-  value => println(s"received onNext event with value: $value")
+  value => println(s"received Next event with value: $value")
 )
 
 emitEmpty.subscribe(
-  value => println(s"received onNext event with value: $value")
+  value => println(s"received Next event with value: $value")
 )
 
 def javaObservableToScalaObservableConverter(): Unit = {
