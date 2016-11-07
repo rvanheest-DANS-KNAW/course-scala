@@ -1,0 +1,83 @@
+package workshop4.assignments.solutions
+
+import javafx.application.Application
+import javafx.collections.FXCollections
+import javafx.event.ActionEvent
+import javafx.geometry.Insets
+import javafx.scene.Scene
+import javafx.scene.control.{Button, ListView, TextField}
+import javafx.scene.layout.{HBox, VBox}
+import javafx.stage.{Stage, WindowEvent}
+
+import org.apache.commons.lang3.StringUtils
+import org.json4s.JsonAST.{JArray, JString}
+import org.json4s.native.JsonMethods
+import rx.lang.scala.JavaConverters._
+import rx.lang.scala.Observable
+import rx.observables.JavaFxObservable
+
+import scala.io.Source
+import scala.language.{implicitConversions, postfixOps}
+
+class WikipediaSuggestion extends Application {
+
+  def parseJSON(json: String): List[String] = {
+    for {
+      JArray(child) <- JsonMethods.parse(json)(1)
+      JString(word) <- child
+    } yield word
+  }
+
+  def searchWikipedia(word: String): Observable[List[String]] = {
+    def urlifyWord(word: String): String = {
+      word.replace(" ", "%20")
+    }
+
+    val url = s"https://en.wikipedia.org/w/api.php?action=opensearch&search=${urlifyWord(word)}"
+    Observable.using(Source.fromURL(url))(r => Observable.just(r.mkString), _.close(), disposeEagerly = true)
+      .map(parseJSON)
+  }
+
+  override def start(stage: Stage): Unit = {
+    val textField = new TextField {
+      setPromptText("search...")
+      setMinHeight(30)
+    }
+    val button = new Button("search")
+    val items = FXCollections.observableArrayList[String]
+
+    val root = new VBox(8, new HBox(8, textField, button), new ListView[String](items)) {
+      setPadding(new Insets(10))
+    }
+
+    val searchSubscription = JavaFxObservable.fromNodeEvents(button, ActionEvent.ACTION).asScala
+      .merge(JavaFxObservable.fromNodeEvents(textField, ActionEvent.ACTION).asScala)
+      .withLatestFrom(JavaFxObservable.fromObservableValue(textField.textProperty()).asScala)((_, text) => text)
+      .filterNot(StringUtils.isBlank)
+      .distinctUntilChanged
+      .flatMap(searchWikipedia)
+      .subscribe(results => {
+        items.clear()
+        results.foreach(items.add)
+      }, e => println(s" something went wrong! $e"))
+
+    JavaFxObservable.fromWindowEvents(stage, WindowEvent.WINDOW_CLOSE_REQUEST).asScala
+      .subscribe(_ => {
+        println("bye bye")
+        if (searchSubscription == null) {
+          println("boom")
+        }
+        searchSubscription.unsubscribe()
+      })
+
+    stage.setScene(new Scene(root, 300, 400))
+    stage.setTitle("Dictionary Suggestions")
+    stage.show()
+  }
+}
+
+object WikipediaSuggestion {
+  def main(args: Array[String]) {
+    Application.launch(classOf[WikipediaSuggestion])
+  }
+}
