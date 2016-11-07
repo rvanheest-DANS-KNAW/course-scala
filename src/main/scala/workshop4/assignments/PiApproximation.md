@@ -19,16 +19,16 @@ operators.
    in practice. Also try to understand what `Observable.defer` is doing; we haven't discussed it yet, but the documentation
    should give you some pointers. Check out what happens when we peel off the `Observable.defer`. **Hint:** this construction
    is equal to the [RxScala variant] of [`Observable.fromCallable`].
-2. In the `main` method, call `random` and make groups of 2 random numbers; this should yield an `Observable[Seq[Int]]`;
+2. In the `main` method, call `random` and make groups of 2 random numbers; this should yield an `Observable[Seq[Double]]`;
    allocate this to `groupsOfTwo`.
-3. Each group of 2 numbers (type `Seq[Int]`) represents the `x`- and `y`-coordinate of a single point respectively. Using
+3. Each group of 2 numbers (type `Seq[Boolean]`) represents the `x`- and `y`-coordinate of a single point respectively. Using
    the value `groupsofTwo`, transform each coordinate into a `Boolean` such that it indicates whether the distance to the
-   origin is smaller than or equal to `1.0`. Allocate this result to `insideCircle: Observable[Int]`.
+   origin is smaller than or equal to `1.0`. Allocate this result to `insideCircle: Observable[Boolean]`.
    **Hint:** use the Pythagorean Theorem to calculate the distance.
 4. Given `insideCircle`, transform each `Boolean` into an accumulated `Hits` object. If `true`, 1 is added to `successes`,
    else `successes` stays the same. `total` is incremented every time, regardless of the `Boolean`. The result should be an
    accumulated stream of `Hits` instances (so, including all intermediate results!). Allocate this to `hits: Observable[Hits]`.
-   **Hint:** use `Hits.empty` as the seed of this operator.
+   **Hint (1):** use `Hits.empty` as the seed of this operator. **Hint (2):** use `booleanToInt` to transform the `Boolean`s.
 5. What should happen to the seed value? Is this part of the actual result or should this be discarded? Just append the
    action to be taken (if any) to `hits`, as this is actually still part of step 4.
 6. Transform each `Hits` instance in the stream `hits` to a `Double` using the formula `hit => hit.successes * 4.0 / hit.total`.

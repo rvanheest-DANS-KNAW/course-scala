@@ -36,7 +36,7 @@ object PiApproximation {
 
     val groupsOfTwo: Observable[Seq[Double]] = ???
 
-    val insideCircle: Observable[Int] = ???
+    val insideCircle: Observable[Boolean] = ???
 
     val hits: Observable[Hits] = ???
 
