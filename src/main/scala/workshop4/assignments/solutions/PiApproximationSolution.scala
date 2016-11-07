@@ -35,7 +35,7 @@ object PiApproximationSolution {
     val groupsOfTwo: Observable[Seq[Double]] = random.tumblingBuffer(2)
 
     val insideCircle: Observable[Boolean] = groupsOfTwo.map {
-      case Seq(x, y) => x * x + y * y <= 1
+      case Seq(x, y) => math.sqrt(x * x + y * y) <= 1.0
     }
 
     val hits: Observable[Hits] = insideCircle.scan(Hits.empty) {

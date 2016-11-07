@@ -23,8 +23,8 @@ operators.
    allocate this to `groupsOfTwo`.
 3. Each group of 2 numbers (type `Seq[Boolean]`) represents the `x`- and `y`-coordinate of a single point respectively. Using
    the value `groupsofTwo`, transform each coordinate into a `Boolean` such that it indicates whether the distance to the
-   origin is smaller than or equal to `1.0`. Allocate this result to `insideCircle: Observable[Boolean]`.
-   **Hint:** use the Pythagorean Theorem to calculate the distance.
+   circle's origin is smaller than or equal to `1.0`. Allocate this result to `insideCircle: Observable[Boolean]`.
+   **Hint:** use `math.sqrt(x * x + y * y) <= 1.0` in this calculation.
 4. Given `insideCircle`, transform each `Boolean` into an accumulated `Hits` object. If `true`, 1 is added to `successes`,
    else `successes` stays the same. `total` is incremented every time, regardless of the `Boolean`. The result should be an
    accumulated stream of `Hits` instances (so, including all intermediate results!). Allocate this to `hits: Observable[Hits]`.
