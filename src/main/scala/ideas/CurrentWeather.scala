@@ -1,4 +1,4 @@
-package workshop4
+package ideas
 
 import javafx.application.Application
 import javafx.event.ActionEvent

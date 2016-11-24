@@ -1,4 +1,4 @@
-package workshop4
+package ideas
 
 import java.time.LocalDateTime
 import javafx.application.Application
@@ -130,7 +130,7 @@ class ClockApp extends Application {
     layout.setAlignment(Pos.CENTER)
 
     val scene = new Scene(layout, Color.TRANSPARENT)
-    scene.getStylesheets.add(getClass.getResource("/workshop4/clockapp.css").toExternalForm)
+    scene.getStylesheets.add(getClass.getResource("/ideas/clockapp.css").toExternalForm)
 
     stage.setScene(scene)
     stage.show()

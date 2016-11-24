@@ -1,4 +1,4 @@
-package workshop4
+package ideas
 
 import javafx.application.Application
 import javafx.geometry.{Bounds, Pos}
@@ -31,7 +31,7 @@ class Sky(screenWidth: Int, screenHeight: Int) extends Canvas(screenWidth, scree
 }
 
 class Grass(screenWidth: Int) extends ImageView {
-  val tile = new Image(Utils.getResource("/workshop4/bugslife/GrassBlock.png"))
+  val tile = new Image(Utils.getResource("/ideas/bugslife/GrassBlock.png"))
   val height = tile.getHeight
   val tilesCount = math.ceil(screenWidth / tile.getWidth).toInt + 1
 
@@ -44,8 +44,8 @@ class Sun(screenHeight: Int) extends ImageView {
 
   def showHeart(showHeart: Boolean): Unit = {
     val image =
-      if (showHeart) new Image(Utils.getResource("/workshop4/bugslife/Heart.png"))
-      else new Image(Utils.getResource("/workshop4/bugslife/Star.png"))
+      if (showHeart) new Image(Utils.getResource("/ideas/bugslife/Heart.png"))
+      else new Image(Utils.getResource("/ideas/bugslife/Star.png"))
 
     setImage(image)
   }
@@ -54,7 +54,7 @@ class Sun(screenHeight: Int) extends ImageView {
   setTranslateY(-(screenHeight - 200))
 }
 
-class Bug(screenHeight: Int, grassHeight: Double) extends ImageView(new Image(Utils.getResource("/workshop4/bugslife/EnemyBug.png"))) {
+class Bug(screenHeight: Int, grassHeight: Double) extends ImageView(new Image(Utils.getResource("/ideas/bugslife/EnemyBug.png"))) {
   val homeY = (-grassHeight / 2) - 5
   val gravity = 0.1
 
@@ -132,7 +132,7 @@ class BugsLife extends Application {
       .filter(keyEvent => keyEvent.getCode == KeyCode.SPACE)
       .filter(_ => bug.getTranslateY >= bug.homeY)
       .subscribe(_ => {
-        new AudioClip(Utils.getResource("/workshop4/bugslife/smb3_jump.wav")).play()
+        new AudioClip(Utils.getResource("/ideas/bugslife/smb3_jump.wav")).play()
         jumps.onNext(jumpSpeed)
       })
 
@@ -146,12 +146,12 @@ class BugsLife extends Application {
       .subscribe(prev => {
         sun.showHeart(!prev)
 
-        if (!prev) new AudioClip(Utils.getResource("/workshop4/bugslife/smb3_coin.wav")).play()
+        if (!prev) new AudioClip(Utils.getResource("/ideas/bugslife/smb3_coin.wav")).play()
       })
 
     JavaFxObservable.fromWindowEvents(stage, WindowEvent.WINDOW_SHOWN)
       .asScala
-      .subscribe(_ => new AudioClip(Utils.getResource("/workshop4/bugslife/smb3_power-up.wav")).play())
+      .subscribe(_ => new AudioClip(Utils.getResource("/ideas/bugslife/smb3_power-up.wav")).play())
 
     JavaFxObservable.fromWindowEvents(stage, WindowEvent.WINDOW_HIDDEN)
       .asScala
