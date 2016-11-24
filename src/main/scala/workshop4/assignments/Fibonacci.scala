@@ -13,20 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package workshop3
+package workshop4.assignments
 
-package object assignments {
+import rx.lang.scala.Observable
 
-	// Diner assignment
-	type Charcoal = String
-	type LighterFluid = String
-	type Fire = String
-	type Meat = String
-	type Steak = String
-	type Dinner = String
+object Fibonacci extends App {
 
-	// Animals assignment
-	type Animal = String
-	type Sound = String
-	type Food = String
+  def fibonacci: Observable[Int] = {
+    Observable.just(0)
+      .repeat
+      .scan((0, 1)) { case ((pp, p), _) => (p, pp + p) }
+      .map(_._2)
+  }
+
+  fibonacci.take(10).subscribe(i => println(i))
+//  fibonacci.takeWhile(n => n < 100).subscribe(i => println(i))
+//  fibonacci.filter(n => n % 2 == 0).takeWhile(n => n < 1000).subscribe(i => println(i))
 }

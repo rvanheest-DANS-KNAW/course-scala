@@ -13,20 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package workshop3
+package workshop4.live
 
-package object assignments {
+import rx.lang.scala.Observable
 
-	// Diner assignment
-	type Charcoal = String
-	type LighterFluid = String
-	type Fire = String
-	type Meat = String
-	type Steak = String
-	type Dinner = String
+object slidingBuffer extends App {
 
-	// Animals assignment
-	type Animal = String
-	type Sound = String
-	type Food = String
+  Observable.from(1 to 10)
+    .slidingBuffer(2, 1) // gives lists of 2 elements, except for the last one, which is a list of 1 element
+    .filter(_.size == 2) // filter out the 'event' with 1 element
+    .subscribe(println(_))
 }
