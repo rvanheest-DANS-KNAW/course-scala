@@ -43,6 +43,8 @@ class OpenWeatherMapService {
   }
 
   def getWeatherFromJson(json: String): Try[Weather] = Try {
+    println(json)
+
     val total = JsonMethods.parse(json)
 
     val position = {

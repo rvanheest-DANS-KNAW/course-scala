@@ -34,7 +34,7 @@ import rx.observables.JavaFxObservable
 import scala.io.Source
 import scala.language.{implicitConversions, postfixOps}
 
-class WikipediaSuggestion extends Application {
+class WikipediaSuggestionSolution extends Application {
 
   def parseJSON(json: String): List[String] = {
     for {
@@ -91,8 +91,8 @@ class WikipediaSuggestion extends Application {
   }
 }
 
-object WikipediaSuggestion {
+object WikipediaSuggestionSolution {
   def main(args: Array[String]) {
-    Application.launch(classOf[WikipediaSuggestion])
+    Application.launch(classOf[WikipediaSuggestionSolution])
   }
 }
