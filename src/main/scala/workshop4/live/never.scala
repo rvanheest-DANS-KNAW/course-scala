@@ -13,20 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package workshop3
+package workshop4.live
 
-package object assignments {
+import rx.lang.scala.Observable
 
-	// Diner assignment
-	type Charcoal = String
-	type LighterFluid = String
-	type Fire = String
-	type Meat = String
-	type Steak = String
-	type Dinner = String
+import scala.io.StdIn
 
-	// Animals assignment
-	type Animal = String
-	type Sound = String
-	type Food = String
+object never extends App {
+
+  Observable.never
+    .doOnSubscribe(println(Thread.currentThread().getName))
+    .subscribe(_ => println("got something"), e => e.printStackTrace(), () => println("completed"))
+
+  StdIn.readLine()
 }

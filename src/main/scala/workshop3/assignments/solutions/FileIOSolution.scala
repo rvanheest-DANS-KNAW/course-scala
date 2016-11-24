@@ -1,6 +1,21 @@
+/**
+ * Copyright (C) 2016 DANS - Data Archiving and Networked Services (info@dans.knaw.nl)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package workshop3.assignments.solutions
 
-import java.io.{BufferedInputStream, BufferedWriter, File, InputStream}
+import java.io.{File, InputStream, Writer}
 
 import resource.{ManagedResource, Using}
 import workshop3.assignments.{Customer, Order, Product}
@@ -75,28 +90,28 @@ object FileIOSolution extends App {
       .toList
   }
 
-  def generateReports(customerInput: BufferedInputStream,
-                      productInput: BufferedInputStream,
-                      orderInput: BufferedInputStream): (List[String], List[String]) = {
+  def generateReports(customerInput: InputStream,
+                      productInput: InputStream,
+                      orderInput: InputStream): (List[String], List[String]) = {
     val orders = readOrders(orderInput)
     val products = readProducts(productInput)
     val customers = readCustomers(customerInput)
 
-    val r1 = report1(orders, products, customers)
-    val r2 = report2(orders, products, customers)
+    val wants = report1(orders, products, customers)
+    val hasToPay = report2(orders, products, customers)
 
-    (r1, r2)
+    (wants, hasToPay)
   }
 
-  def writeReport(report: List[String], output: BufferedWriter): Unit = {
+  def writeReport(report: List[String], output: Writer): Unit = {
     output.write(report.mkString("\n"))
   }
 
   val reports: ManagedResource[(List[String], List[String])] = for {
-    cIn <- Using.fileInputStream(customerFile)
-    pIn <- Using.fileInputStream(productFile)
-    oIn <- Using.fileInputStream(orderFile)
-  } yield generateReports(cIn, pIn, oIn)
+    customers <- Using.fileInputStream(customerFile)
+    products <- Using.fileInputStream(productFile)
+    orders <- Using.fileInputStream(orderFile)
+  } yield generateReports(customers, products, orders)
 
   val reportWriting: ManagedResource[Unit] = for {
     rs <- reports

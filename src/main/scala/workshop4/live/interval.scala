@@ -13,20 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package workshop3
+package workshop4.live
 
-package object assignments {
+import rx.lang.scala.Observable
 
-	// Diner assignment
-	type Charcoal = String
-	type LighterFluid = String
-	type Fire = String
-	type Meat = String
-	type Steak = String
-	type Dinner = String
+import scala.concurrent.duration._
+import scala.io.StdIn
+import scala.language.postfixOps
 
-	// Animals assignment
-	type Animal = String
-	type Sound = String
-	type Food = String
+object interval extends App {
+
+  Observable.interval(1 second)
+    .doOnSubscribe(println(Thread.currentThread().getName))
+
+    .subscribe(_ => println("got something"), e => e.printStackTrace(), () => println("completed"))
+
+  StdIn.readLine()
 }
