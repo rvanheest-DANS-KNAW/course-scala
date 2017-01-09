@@ -86,7 +86,7 @@ Note that just as with other collections that have `flatMap`, you can use for-co
 some cases this is really useful, such as in [easy-ingest-flow]! The example above can be translated into the following
 for-comprehension:
 
-[easy-ingest-flow]: https://github.com/rvanheest-DANS-KNAW/easy-ingest-flow/blob/527d152f371e90c64a4104b7e666645a21cfe869/src/main/scala/nl/knaw/dans/easy/ingest_flow/MendeleyExecution.scala#L30
+[easy-ingest-flow]: https://github.com/DANS-KNAW/old-easy-ingest-flow/blob/7e336c322ee7eec9f24bdaf641509b605ad7f356/src/main/scala/nl/knaw/dans/easy/ingest_flow/MendeleyExecution.scala#L36
 
 ```scala
 val forCompr = for {
