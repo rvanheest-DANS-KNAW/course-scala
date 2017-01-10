@@ -65,6 +65,8 @@ class WikipediaSuggestion extends Application {
       setPadding(new Insets(10))
     }
 
+    // remove the lazy once you start implementing.
+    // this is only here to make sure that application is initially running
     lazy val searchSubscription: Subscription = ???
 
     JavaFxObservable.fromWindowEvents(stage, WindowEvent.WINDOW_CLOSE_REQUEST).asScala
