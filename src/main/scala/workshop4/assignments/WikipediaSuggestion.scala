@@ -65,7 +65,7 @@ class WikipediaSuggestion extends Application {
       setPadding(new Insets(10))
     }
 
-    val searchSubscription: Subscription = ???
+    lazy val searchSubscription: Subscription = ???
 
     JavaFxObservable.fromWindowEvents(stage, WindowEvent.WINDOW_CLOSE_REQUEST).asScala
       .subscribe(_ => {
