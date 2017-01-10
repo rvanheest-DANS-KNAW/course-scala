@@ -23,8 +23,8 @@ Discard every third element
 [RxJava's `buffer` operators]: http://reactivex.io/RxJava/javadoc/rx/Observable.html#buffer(rx.functions.Func0)
 [RxScala equivalent]: http://reactivex.io/rxscala/comparison.html
 [`flatMapIterable`]: http://reactivex.io/RxJava/javadoc/rx/Observable.html#flatMapIterable(rx.functions.Func1)
-[`Seq.take`]: http://www.scala-lang.org/api/current/index.html#scala.collection.Seq@take(n:Int):Repr
-[`Seq.dropRight`]: http://www.scala-lang.org/api/current/index.html#scala.collection.Seq@dropRight(n:Int):Repr
+[`Seq.take`]: http://www.scala-lang.org/api/current/scala/collection/Seq.html#take(n:Int):Repr
+[`Seq.dropRight`]: http://www.scala-lang.org/api/current/scala/collection/Seq.html#dropRight(n:Int):Repr
 [RxJava's `window` operators]: http://reactivex.io/RxJava/javadoc/rx/Observable.html#window(rx.functions.Func0)
 [`Observable.take`]: http://reactivex.io/rxscala/scaladoc/index.html#rx.lang.scala.Observable@take(n:Int):rx.lang.scala.Observable[T]
 [`Observable.dropRight`]: http://reactivex.io/rxscala/scaladoc/index.html#rx.lang.scala.Observable@dropRight(n:Int):rx.lang.scala.Observable[T]
