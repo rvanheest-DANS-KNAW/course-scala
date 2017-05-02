@@ -15,6 +15,7 @@ Course content
 * [Workshop 2](src/main/scala/workshop2) - Inheritance, abstract classes, traits, multiple inheritance and type aliases
 * [Workshop 3](src/main/scala/workshop3) - Higher-order functions, `Option`, `Try`, collections and for-comprehensions
 * [Workshop 4](src/main/scala/workshop4) - Introduction and basics of reactive programming
+* [Workshop 5](src/main/scala/workshop5) - Introduction to the 'Cake Pattern' in Scala
 
 
 Bugs and Feedback
