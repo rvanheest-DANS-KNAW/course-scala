@@ -265,3 +265,4 @@ Further reading/watching
 * [The Cake Pattern in Practice](https://www.youtube.com/watch?v=DysTHmpDgvk)
 * [Scala dependency injection](http://jonasboner.com/real-world-scala-dependency-injection-di/)
 * [Cake pattern in depth](http://www.cakesolutions.net/teamblogs/2011/12/19/cake-pattern-in-depth)
+* [Screen recording of this workshop (May 2nd, 2017)](https://youtu.be/1fJ34WD0Ed0)
