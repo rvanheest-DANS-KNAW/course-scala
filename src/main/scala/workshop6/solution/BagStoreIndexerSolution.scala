@@ -30,7 +30,7 @@ object BagStoreIndexerSolution extends App {
   case class BagStore(path: File, name: String, bags: Seq[Bag])
 
   val stores = currentWorkingDirectory / "src" / "main" / "resources" / "workshop6" / "bagstores"
-  val reportFile = currentWorkingDirectory / "bagstore-report-solution.txt"
+  val reportFile = currentWorkingDirectory / "src" / "main" / "resources" / "workshop6" / "bagstore-report-solution.txt"
 
   getBagStores(stores).map(generateReport).foreach { report =>
     reportFile.appendText(report).appendText("\n")
