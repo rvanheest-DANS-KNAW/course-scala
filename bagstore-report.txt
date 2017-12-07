@@ -1,0 +1,25 @@
+Bagstore 'bagstore1'
+/Users/RichardvanHeest/git/workshops/course-scala/src/main/resources/workshop6/bagstores/bagstore1
+  Bag 00000000-0000-0000-0000-000000000001
+  bagstore1/00/000000000000000000000000000001/bag
+    data/sub/u - 12 bytes - sha1: 36e74ac7f74e4969a46209adcb311563bafb1a05
+    data/sub/v - 12 bytes - sha1: 26df90e63843325578e5242a08db8f1e2abcf179
+    data/sub/w - 12 bytes - sha1: e7ed51150af351e3ca1c28fb688c513eb47e028f
+    data/x - 12 bytes - sha1: 1abd6cc24e13fa2ad36a621bf7fd94de26a6701a
+    data/y - 12 bytes - sha1: 331a69099835c3c4d3769fe287d67d04a7aea0da
+    data/z - 12 bytes - sha1: f77a51e92cc430138e8b3343c5a317a531d3ebf3
+     
+  Bag 00000000-0000-0000-0000-000000000002
+  bagstore1/00/000000000000000000000000000002/bag
+    data/y - 24 bytes - sha1: f3308597f8772277b3e43678831e7cc7ab732789
+     
+  Bag 00000000-0000-0000-0000-000000000003
+  bagstore1/00/000000000000000000000000000003/bag
+    data/p - 12 bytes - sha1: 303065be0f2f7f1e0673d7a5c73f955aab4d3498
+    data/sub/q - 12 bytes - sha1: 4406c2c0019766a98452a0056950298a97e181da
+     
+     
+Bagstore 'bagstore2'
+/Users/RichardvanHeest/git/workshops/course-scala/src/main/resources/workshop6/bagstores/bagstore2
+  [empty]
+     
