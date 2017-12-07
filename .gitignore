@@ -4,3 +4,5 @@
 *.iml
 
 /*.sc
+
+src/main/resources/workshop6/bagstore-report.txt

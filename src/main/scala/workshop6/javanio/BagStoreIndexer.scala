@@ -31,7 +31,7 @@ object BagStoreIndexer extends App {
   case class BagStore(path: Path, name: String, bags: Seq[Bag])
 
   val stores = Paths.get("src/main/resources/workshop6/bagstores").toAbsolutePath
-  val reportFile = Paths.get("bagstore-report.txt").toAbsolutePath
+  val reportFile = Paths.get("src/main/resources/workshop6/bagstore-report.txt").toAbsolutePath
 
   getBagStores(stores).map(generateReport).foreach { report =>
     Files.write(reportFile, report.getBytes(), StandardOpenOption.APPEND, StandardOpenOption.CREATE)
